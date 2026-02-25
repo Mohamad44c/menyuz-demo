@@ -1,6 +1,9 @@
 import type { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
+  admin: {
+    group: 'Product Management',
+  },
   slug: 'media',
   access: {
     read: () => true,
