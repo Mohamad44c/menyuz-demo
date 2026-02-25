@@ -270,6 +270,10 @@ export interface Setting {
   id: number;
   deliveryNumber: number;
   /**
+   * Display name for your store location (e.g. "Main Street Branch")
+   */
+  locationTitle?: string | null;
+  /**
    * Paste a Google Maps URL to display your store location for customers (e.g. https://maps.google.com/... or https://goo.gl/maps/...)
    */
   locationUrl?: string | null;
@@ -482,6 +486,7 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface SettingsSelect<T extends boolean = true> {
   deliveryNumber?: T;
+  locationTitle?: T;
   locationUrl?: T;
   updatedAt?: T;
   createdAt?: T;

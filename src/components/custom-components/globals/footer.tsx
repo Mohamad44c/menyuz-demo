@@ -1,7 +1,5 @@
 import Link from 'next/link'
-import { Phone, MapPin, Coffee, Gamepad2 } from 'lucide-react'
-// import Instagram from '@/assets/instagram.svg'
-// import Facebook from '@/assets/facebook.svg'
+import { Phone, MapPin, Coffee, Instagram } from 'lucide-react'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -13,15 +11,14 @@ export default function Footer() {
           {/* Cafe Info */}
           <div className="flex flex-col">
             <Link href="/" className="mb-2 text-xl font-bold text-primary">
-              Paul&apos;s Cafe
+              Chicken & Chips Menu
             </Link>
             <div className="mt-2 flex items-center">
               <div className="flex flex-col md:flex-row gap-2">
                 <Coffee className="size-5 text-primary" />
-                <Gamepad2 className="size-5 text-primary" />
               </div>
               <span className="ms-3 text-muted-foreground">
-                Where great coffee meets gaming excitement!
+                Where great chicken meets chips!
               </span>
             </div>
           </div>
@@ -36,13 +33,13 @@ export default function Footer() {
                   className="flex items-center text-muted-foreground"
                 >
                   <Phone className="h-5 w-5 me-2 text-muted-foreground" />
-                  <span>+961 76 425 951</span>
+                  <span>+961 </span>
                 </Link>
               </li>
               <li className="flex items-center text-muted-foreground">
                 <MapPin className="h-5 w-5 me-2 text-primary-foreground" />
                 <span>
-                  Tibnine, South Lebanon <br /> Beside Hometown Vets
+                  Beirut, Lebanon
                 </span>
               </li>
             </ul>
@@ -54,11 +51,11 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="https://www.instagram.com/cafe_pauls?igsh=MTl0dHppbzlmZW41NA=="
+                  href=""
                   className="flex items-center text-muted-foreground"
                 >
-                  {/* <Instagram className="me-2 text-muted-foreground" /> */}
-                  <span>cafe_pauls</span>
+                  <Instagram className="me-2 text-muted-foreground" />
+                  <span>chicken_chips_menu</span>
                 </Link>
               </li>
             </ul>
@@ -67,7 +64,7 @@ export default function Footer() {
 
         <div className="mt-8 flex flex-col items-center justify-between border-t border-gray-200 pt-8 md:flex-row">
           <p className="text-sm text-gray-500">
-            &copy; {currentYear} <span className="font-semibold">Paul&apos;s Cafe</span>. All rights
+            &copy; {currentYear} <span className="font-semibold">Chicken & Chips Menu</span>. All rights
             reserved.
           </p>
           <div className="mt-4 md:mt-0">

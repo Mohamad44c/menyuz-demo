@@ -1,13 +1,15 @@
 import React from 'react'
 import './globals.css'
 
-import { Poppins, Amiri } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { RootProvider } from '@/providers/root-provider'
+import Navbar from '@/components/custom-components/globals/navbar'
+import Footer from '@/components/custom-components/globals/footer'
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: 'Chicken & Chips Menu',
+  title: 'Chicken & Chips Menu',
 }
 
 const poppins = Poppins({
@@ -20,10 +22,18 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={cn(poppins.variable, 'font-poppins antialiased')} suppressHydrationWarning>
       <body>
         <RootProvider>
-          <main>{children}</main>
+          <div className="flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex flex-col justify-center items-center">
+
+              {children}
+            </main>
+            <Footer />
+          </div>
+
         </RootProvider>
       </body>
     </html>

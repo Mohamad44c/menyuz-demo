@@ -19,6 +19,14 @@ const Settings: CollectionConfig = {
       min: 1,
     },
     {
+      name: 'locationTitle',
+      label: 'Location Title',
+      type: 'text',
+      admin: {
+        description: 'Display name for your store location (e.g. "Main Street Branch")',
+      },
+    },
+    {
       name: 'locationUrl',
       label: 'Location (Google Maps)',
       type: 'text',

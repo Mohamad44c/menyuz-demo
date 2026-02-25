@@ -3,9 +3,6 @@
 import { motion, useScroll } from 'framer-motion'
 import Link from 'next/link'
 import ThemeToggle from '../theme-toggle'
-import Image from 'next/image'
-
-// import Logo from '@/assets/logo.jpeg'
 
 export default function Navbar() {
   const { scrollYProgress } = useScroll()
@@ -17,7 +14,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex items-center">
             <Link href="/en" className="text-xl font-bold text-primary">
-              Paul&apos;s Cafe
+              Chicken & Chips Menu
             </Link>
           </div>
           <div className="flex items-center gap-4">
