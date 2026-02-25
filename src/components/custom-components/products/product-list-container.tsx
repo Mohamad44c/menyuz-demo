@@ -1,0 +1,64 @@
+'use client'
+
+import type { ReactNode } from 'react'
+import ProductCard from './product-card'
+import { Media, Product } from '@/payload-types'
+
+interface ProductListProps {
+  products: Product[]
+  onProductClick?: (productId: number) => void
+  emptyState?: ReactNode
+  isLoading?: boolean
+}
+
+export default function ProductListContainer({
+  products,
+  onProductClick,
+  emptyState,
+  isLoading = false,
+}: ProductListProps) {
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-6">
+        {[...Array(8)].map((_, index) => (
+          <div key={index} className="bg-gray-100 rounded-lg h-72 animate-pulse" />
+        ))}
+      </div>
+    )
+  }
+
+  // Handle empty state
+  if (products.length === 0) {
+    return (
+      <div className="w-full py-12 flex justify-center items-center">
+        {emptyState || (
+          <p className="text-gray-500 text-center">No products available in this category.</p>
+        )}
+      </div>
+    )
+  }
+
+  // Render product grid
+  return (
+    <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 container mt-7 mb-10 mx-auto">
+      {products.map((product) => {
+        const image = product.featuredImage as Media
+        // Add a null/undefined check
+        const imageUrl = image?.thumbnailURL || ''
+        return (
+          <ProductCard
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            description={product.description || ''}
+            basePrice={product.basePrice}
+            featuredImage={imageUrl}
+            sizeOptions={product.sizeOptions || null}
+            onClick={onProductClick}
+          />
+        )
+      })}
+    </div>
+  )
+}
