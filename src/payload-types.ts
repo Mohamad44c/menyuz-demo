@@ -70,6 +70,9 @@ export interface Config {
     users: User;
     media: Media;
     categories: Category;
+    products: Product;
+    deals: Deal;
+    settings: Setting;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +83,9 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    deals: DealsSelect<false> | DealsSelect<true>;
+    settings: SettingsSelect<false> | SettingsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -174,6 +180,104 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: number;
+  name: string;
+  category: number | Category;
+  description?: string | null;
+  ingredients?: string | null;
+  featuredImage?: (number | null) | Media;
+  basePrice: number;
+  cost?: number | null;
+  /**
+   * Automatically calculated
+   */
+  profitMargin?: number | null;
+  isAvailable?: boolean | null;
+  isFeatured?: boolean | null;
+  sizeOptions?:
+    | {
+        sizeName: string;
+        priceModifier?: number | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  flavorOptions?:
+    | {
+        flavorName: string;
+        additionalCost?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  addOns?:
+    | {
+        name: string;
+        price: number;
+        maxSelection?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deals".
+ */
+export interface Deal {
+  id: number;
+  title: string;
+  description?: string | null;
+  products: (number | Product)[];
+  featuredImage?: (number | null) | Media;
+  /**
+   * Automatically calculated sum of original product prices
+   */
+  originalTotalPrice?: number | null;
+  /**
+   * Special price for this bundle/deal
+   */
+  offerPrice: number;
+  /**
+   * Automatically calculated discount percentage
+   */
+  discountPercentage?: number | null;
+  /**
+   * When this deal should become active
+   */
+  validFrom?: string | null;
+  /**
+   * When this deal should expire
+   */
+  validUntil?: string | null;
+  /**
+   * Only active deals will be shown to customers
+   */
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Global settings for the app
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings".
+ */
+export interface Setting {
+  id: number;
+  deliveryNumber: number;
+  /**
+   * Paste a Google Maps URL to display your store location for customers (e.g. https://maps.google.com/... or https://goo.gl/maps/...)
+   */
+  locationUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -207,6 +311,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: number | Product;
+      } | null)
+    | ({
+        relationTo: 'deals';
+        value: number | Deal;
+      } | null)
+    | ({
+        relationTo: 'settings';
+        value: number | Setting;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -298,6 +414,75 @@ export interface CategoriesSelect<T extends boolean = true> {
   _order?: T;
   name?: T;
   icon?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  name?: T;
+  category?: T;
+  description?: T;
+  ingredients?: T;
+  featuredImage?: T;
+  basePrice?: T;
+  cost?: T;
+  profitMargin?: T;
+  isAvailable?: T;
+  isFeatured?: T;
+  sizeOptions?:
+    | T
+    | {
+        sizeName?: T;
+        priceModifier?: T;
+        description?: T;
+        id?: T;
+      };
+  flavorOptions?:
+    | T
+    | {
+        flavorName?: T;
+        additionalCost?: T;
+        id?: T;
+      };
+  addOns?:
+    | T
+    | {
+        name?: T;
+        price?: T;
+        maxSelection?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "deals_select".
+ */
+export interface DealsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  products?: T;
+  featuredImage?: T;
+  originalTotalPrice?: T;
+  offerPrice?: T;
+  discountPercentage?: T;
+  validFrom?: T;
+  validUntil?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "settings_select".
+ */
+export interface SettingsSelect<T extends boolean = true> {
+  deliveryNumber?: T;
+  locationUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }

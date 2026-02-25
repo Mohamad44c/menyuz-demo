@@ -5,13 +5,9 @@ import Link from 'next/link'
 import ThemeToggle from '../theme-toggle'
 import Image from 'next/image'
 
-// import Logo from '@/assets/logo.jpeg' 
+// import Logo from '@/assets/logo.jpeg'
 
-type NavbarProps = {
-  locale: string
-}
-
-export default function Navbar({ locale }: NavbarProps) {
+export default function Navbar() {
   const { scrollYProgress } = useScroll()
 
   return (
@@ -25,7 +21,6 @@ export default function Navbar({ locale }: NavbarProps) {
             </Link>
           </div>
           <div className="flex items-center gap-4">
-        
             <ThemeToggle />
             <Link href="https://wa.me/+96176425951" target="_blank">
               <svg

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Phone, MapPin, Coffee, Gamepad2 } from 'lucide-react'
-import Instagram from '@/assets/instagram.svg'
-import Facebook from '@/assets/facebook.svg'
+// import Instagram from '@/assets/instagram.svg'
+// import Facebook from '@/assets/facebook.svg'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -57,7 +57,7 @@ export default function Footer() {
                   href="https://www.instagram.com/cafe_pauls?igsh=MTl0dHppbzlmZW41NA=="
                   className="flex items-center text-muted-foreground"
                 >
-                  <Instagram className="me-2 text-muted-foreground" />
+                  {/* <Instagram className="me-2 text-muted-foreground" /> */}
                   <span>cafe_pauls</span>
                 </Link>
               </li>
