@@ -2,9 +2,22 @@
 
 import React from 'react'
 import Image, { StaticImageData } from 'next/image'
+import type { Media } from '@/payload-types'
 import { ICartItem, useCartStore } from '@/store/cartStore'
 import ProductQuantityCounter from '../products/product-quantity-counter'
 import { moneyFormatter } from '@/lib/utils'
+
+function resolveImageSrc(
+  featuredImage: ICartItem['featuredImage'],
+): string | StaticImageData | null {
+  if (!featuredImage) return null
+  if (typeof featuredImage === 'string') return featuredImage
+  if (typeof featuredImage === 'object' && 'url' in featuredImage) {
+    const media = featuredImage as Media
+    return media.url || media.thumbnailURL || null
+  }
+  return null
+}
 
 type CartItemProps = {
   cartItem: ICartItem
@@ -15,10 +28,10 @@ export default function CartItem({ cartItem }: CartItemProps) {
 
   const productId = cartItem.id
   const name = cartItem.name
-  const basePrice = cartItem.basePrice || 0
+  const basePrice = cartItem.basePrice
   const totalPrice = basePrice * cartItem.quantity
 
-  const featuredImage = cartItem.featuredImage as unknown as string | StaticImageData
+  const featuredImage = resolveImageSrc(cartItem.featuredImage)
 
   return (
     <div className="w-full flex flex-col justify-center items-center text-primary">
