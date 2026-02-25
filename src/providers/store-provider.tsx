@@ -21,7 +21,7 @@ type CartStoreApi = StoreApi<CartStore>
 const CartContext = createContext<CartStoreApi | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  // @ts-ignore
+  // @ts-expect-error - useRef generic doesn't match StoreApi initialization
   const storeRef = useRef<CartStoreApi>()
 
   // Initialize the store if it doesn't exist

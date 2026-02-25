@@ -54,7 +54,8 @@ export default function ProductListContainer({
             description={product.description || ''}
             basePrice={product.basePrice}
             featuredImage={imageUrl}
-            sizeOptions={product.sizeOptions || null}
+            sizeOptions={product.sizeOptions ?? undefined}
+            sauces={product.sauces ?? undefined}
             onClick={onProductClick}
           />
         )

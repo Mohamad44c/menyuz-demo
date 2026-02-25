@@ -20,6 +20,7 @@ export default async function HomePage() {
   const products = await payload.find({
     collection: 'products',
     limit: 0,
+    depth: 2,
   })
 
   return (

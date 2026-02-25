@@ -2,8 +2,8 @@
 
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
-import { Product } from '@/payload-types'
-import { useState } from 'react'
+import { Product, Sauce } from '@/payload-types'
+import { useMemo, useState } from 'react'
 import {
   Drawer,
   DrawerContent,
@@ -22,9 +22,13 @@ interface ProductCardProps {
   basePrice: number
   featuredImage: string | StaticImageData
   sizeOptions?: Product['sizeOptions']
-  flavorOptions?: Product['flavorOptions']
+  sauces?: Product['sauces']
   className?: string
   onClick?: (id: number) => void
+}
+
+function isSauceObject(s: number | Sauce): s is Sauce {
+  return typeof s === 'object' && s !== null && 'name' in s
 }
 
 export default function ProductCard({
@@ -34,41 +38,36 @@ export default function ProductCard({
   basePrice,
   featuredImage,
   sizeOptions = [],
-  flavorOptions = [],
+  sauces = [],
   className,
   onClick,
 }: ProductCardProps) {
-  const { cart, incrementQuantity, decrementQuantity } = useCartStore()
+  const addToCart = useCartStore((state) => state.addToCart)
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  const [selectedFlavor, setSelectedFlavor] = useState<string | null>(null)
+  const [selectedSauce, setSelectedSauce] = useState<Sauce | null>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const addToCart = useCartStore((state) => state.addToCart)
+
+  const sauceOptions = useMemo(
+    () => sauces?.filter(isSauceObject) ?? [],
+    [sauces],
+  )
 
   //   console.log('[CART] ', cart)
 
   const handleAddToCart = () => {
-    // Find the selected size option if it exists
     const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
-    // Find the selected flavor option if it exists
-    const selectedFlavorOption = flavorOptions?.find((opt) => opt.flavorName === selectedFlavor)
-
-    // Calculate the final price including size and flavor modifiers
     const sizeModifier = selectedSizeOption?.priceModifier || 0
-    const flavorModifier = selectedFlavorOption?.additionalCost || 0
-    const price = basePrice + sizeModifier + flavorModifier
+    const price = basePrice + sizeModifier
 
-    // Prepare the cart item
     const cartItem = {
-      id: id.toString(), // Ensure ID is string if your store expects it
+      id: id.toString(),
       name,
       basePrice,
-      price, // Include the calculated price
-      size: selectedSize || 'Small', // More clear property name than sizeOptions
-      flavor: selectedFlavor || undefined,
-      quantity: quantity,
-      featuredImage: featuredImage,
-      // Include other necessary fields your cart might need
+      price,
+      size: selectedSize || 'Small',
+      quantity,
+      featuredImage,
       ...(selectedSizeOption && {
         sizeOptions: {
           sizeName: selectedSizeOption.sizeName,
@@ -76,15 +75,15 @@ export default function ProductCard({
           description: selectedSizeOption.description || undefined,
         },
       }),
-      ...(selectedFlavorOption && {
-        flavorOptions: {
-          flavorName: selectedFlavorOption.flavorName,
-          additionalCost: selectedFlavorOption.additionalCost || 0,
+      ...(selectedSauce && {
+        sauce: {
+          id: selectedSauce.id,
+          name: selectedSauce.name,
         },
       }),
     }
 
-    // @ts-ignore
+    // @ts-expect-error - cart item extends Product with custom fields
     addToCart(cartItem, quantity)
     setIsOpen(false)
   }
@@ -184,25 +183,22 @@ export default function ProductCard({
             </div>
           )}
 
-          {flavorOptions && flavorOptions?.length > 0 && (
+          {sauceOptions.length > 0 && (
             <div className="flex items-center gap-4">
-              <h3 className="font-medium">Select Flavor</h3>
+              <h3 className="font-medium">Select Sauce</h3>
               <div className="flex flex-wrap gap-2">
-                {flavorOptions?.map((option) => (
+                {sauceOptions.map((option) => (
                   <Button
                     variant="outline"
-                    key={option.id || option.flavorName}
+                    key={option.id}
                     className={`border rounded-lg h-8 text-sm transition-colors ${
-                      selectedFlavor === option.flavorName
+                      selectedSauce?.id === option.id
                         ? 'bg-black text-white border-black'
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
-                    onClick={() => setSelectedFlavor(option.flavorName)}
+                    onClick={() => setSelectedSauce(selectedSauce?.id === option.id ? null : option)}
                   >
-                    {option.flavorName}
-                    {option.additionalCost && option.additionalCost > 0 && (
-                      <span className="ml-1">(+${option.additionalCost.toFixed(2)})</span>
-                    )}
+                    {option.name}
                   </Button>
                 ))}
               </div>
@@ -222,9 +218,7 @@ export default function ProductCard({
                 $
                 {(
                   basePrice +
-                  (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0) +
-                  (flavorOptions?.find((opt) => opt.flavorName === selectedFlavor)
-                    ?.additionalCost || 0)
+                  (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0)
                 ).toFixed(2)}
               </span>
             </div>

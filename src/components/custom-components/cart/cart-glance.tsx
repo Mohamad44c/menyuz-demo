@@ -19,7 +19,7 @@ import CartListItems from './cart-list-items'
 
 export default function CartGlance() {
   const { cart, totalItems, totalPrice } = useCartStore()
-  const [isOpen, setIsOpen] = useState(false)
+  const [_isOpen, setIsOpen] = useState(false)
 
   const subtotal = totalPrice() // Using the store's totalPrice function
 

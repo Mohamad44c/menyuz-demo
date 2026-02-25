@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import CategoryContainer from '../categories/category-container'
 import ProductListContainer from './product-list-container'
 import { Category, Product } from '@/payload-types'
@@ -26,11 +26,6 @@ export default function ProductDisplay({ categories, products }: ProductDisplayP
     })
   }, [categories])
 
-  // Get category object from ID (helper function)
-  const getCategoryById = (categoryId: number) => {
-    return categories.find((category) => category.id === categoryId)
-  }
-
   // Get category ID from product
   const getProductCategoryId = (product: Product) => {
     return typeof product.category === 'number' ? product.category : product.category.id
@@ -38,6 +33,8 @@ export default function ProductDisplay({ categories, products }: ProductDisplayP
 
   // Group products by category
   const groupedProducts = useMemo(() => {
+    const getCategoryById = (categoryId: number) =>
+      categories.find((category) => category.id === categoryId)
     // If a specific category is selected, only show products from that category
     if (selectedCategory !== 0) {
       const categoryProducts = products.filter(
@@ -67,13 +64,15 @@ export default function ProductDisplay({ categories, products }: ProductDisplayP
     return groups
   }, [products, categories, selectedCategory, sortedCategories])
 
+  const handleSelectCategory = useCallback((categoryId: number) => {
+    setSelectedCategory(categoryId)
+  }, [])
+
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <CategoryContainer
         categories={categories}
-        onSelectCategory={(categoryId) => {
-          setSelectedCategory(categoryId)
-        }}
+        onSelectCategory={handleSelectCategory}
       />
 
       <div className="mt-8 space-y-12">
@@ -83,7 +82,7 @@ export default function ProductDisplay({ categories, products }: ProductDisplayP
 
             <ProductListContainer
               products={group.products}
-              onProductClick={(productId) => {
+              onProductClick={(_productId) => {
                 // Handle product selection if needed
               }}
             />

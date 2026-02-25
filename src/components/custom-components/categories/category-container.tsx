@@ -29,11 +29,11 @@ export default function CategoryContainer({
 
   const [activeCategory, setActiveCategory] = useState<number>(initialCategory)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [showLeftArrow, setShowLeftArrow] = useState(false)
-  const [showRightArrow, setShowRightArrow] = useState(true)
+  const [_showLeftArrow, setShowLeftArrow] = useState(false)
+  const [_showRightArrow, setShowRightArrow] = useState(true)
 
   // Framer Motion scroll handling
-  const [isVisible, setIsVisible] = useState(true)
+  const [_isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
   const { scrollY } = useScroll()
 
@@ -78,7 +78,7 @@ export default function CategoryContainer({
     if (onSelectCategory) {
       onSelectCategory(categoryToActivate)
     }
-  }, []) // Empty dependency array means this runs once on mount
+  }, [initialCategory, onSelectCategory])
 
   // Check scroll position to show/hide navigation arrows
   useEffect(() => {
