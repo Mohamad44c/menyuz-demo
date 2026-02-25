@@ -13,21 +13,31 @@ export const Products: CollectionConfig = {
       type: 'row',
       fields: [
         {
-          name: 'name',
-          type: 'text',
-          required: true,
-          localized: true,
-          admin: {
-            width: '50%',
-          },
-        },
-        {
           name: 'category',
           type: 'relationship',
           relationTo: 'categories',
           required: true,
           admin: {
-            width: '50%',
+            width: '33%',
+          },
+        },
+        {
+          name: 'name',
+          type: 'text',
+          required: true,
+          admin: {
+            width: '33%',
+          },
+        },
+        // Pricing structure
+        {
+          name: 'basePrice',
+          label: 'Price ($)',
+          type: 'number',
+          required: true,
+          min: 0,
+          admin: {
+            width: '33%',
           },
         },
       ],
@@ -38,22 +48,8 @@ export const Products: CollectionConfig = {
         {
           name: 'description',
           type: 'textarea',
-          localized: true,
           admin: {
-            width: '50%',
-            style: {
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-              maxWidth: '100%',
-            },
-          },
-        },
-        {
-          name: 'ingredients',
-          type: 'textarea',
-          localized: true,
-          admin: {
-            width: '50%',
+            width: '100%',
             style: {
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
@@ -68,48 +64,7 @@ export const Products: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
     },
-    // Pricing structure
-    {
-      type: 'row',
-      fields: [
-        {
-          name: 'basePrice',
-          type: 'number',
-          required: true,
-          min: 0,
-          admin: {
-            width: '33%',
-          },
-        },
-        {
-          name: 'cost',
-          type: 'number',
-          min: 0,
-          admin: {
-            width: '33%',
-          },
-        },
-        {
-          name: 'profitMargin',
-          type: 'number',
-          admin: {
-            description: 'Automatically calculated',
-            readOnly: true,
-            width: '33%',
-          },
-          hooks: {
-            beforeChange: [
-              ({ data }) => {
-                if (data?.basePrice && data?.cost) {
-                  return ((data.basePrice - data.cost) / data.cost) * 100
-                }
-                return undefined
-              },
-            ],
-          },
-        },
-      ],
-    },
+
     // Product status flags
     {
       type: 'row',
@@ -136,6 +91,17 @@ export const Products: CollectionConfig = {
       type: 'collapsible',
       label: 'Product Variations',
       fields: [
+        // Sauces
+        {
+          name: 'sauces',
+          type: 'relationship',
+          relationTo: 'sauces',
+          hasMany: true,
+          label: 'Available Sauces',
+          admin: {
+            description: 'Select one or multiple sauces available for this product',
+          },
+        },
         // Size options
         {
           name: 'sizeOptions',
@@ -173,35 +139,6 @@ export const Products: CollectionConfig = {
                   maxWidth: '100%',
                 },
               },
-            },
-          ],
-        },
-        // Flavor options
-        {
-          name: 'flavorOptions',
-          type: 'array',
-          label: 'Flavor Options',
-          fields: [
-            {
-              type: 'row',
-              fields: [
-                {
-                  name: 'flavorName',
-                  type: 'text',
-                  required: true,
-                  admin: {
-                    width: '60%',
-                  },
-                },
-                {
-                  name: 'additionalCost',
-                  type: 'number',
-                  defaultValue: 0,
-                  admin: {
-                    width: '40%',
-                  },
-                },
-              ],
             },
           ],
         },

@@ -71,6 +71,7 @@ export interface Config {
     categories: Category;
     products: Product;
     deals: Deal;
+    sauces: Sauce;
     media: Media;
     settings: Setting;
     'payload-kv': PayloadKv;
@@ -84,6 +85,7 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     deals: DealsSelect<false> | DealsSelect<true>;
+    sauces: SaucesSelect<false> | SaucesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -165,31 +167,21 @@ export interface Category {
  */
 export interface Product {
   id: number;
-  name: string;
   category: number | Category;
+  name: string;
   description?: string | null;
-  ingredients?: string | null;
   featuredImage?: (number | null) | Media;
-  basePrice: number;
-  cost?: number | null;
-  /**
-   * Automatically calculated
-   */
-  profitMargin?: number | null;
   isAvailable?: boolean | null;
   isFeatured?: boolean | null;
+  /**
+   * Select one or multiple sauces available for this product
+   */
+  sauces?: (number | Sauce)[] | null;
   sizeOptions?:
     | {
         sizeName: string;
         priceModifier?: number | null;
         description?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  flavorOptions?:
-    | {
-        flavorName: string;
-        additionalCost?: number | null;
         id?: string | null;
       }[]
     | null;
@@ -222,6 +214,16 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sauces".
+ */
+export interface Sauce {
+  id: number;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -321,6 +323,10 @@ export interface PayloadLockedDocument {
         value: number | Deal;
       } | null)
     | ({
+        relationTo: 'sauces';
+        value: number | Sauce;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -408,29 +414,19 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "products_select".
  */
 export interface ProductsSelect<T extends boolean = true> {
-  name?: T;
   category?: T;
+  name?: T;
   description?: T;
-  ingredients?: T;
   featuredImage?: T;
-  basePrice?: T;
-  cost?: T;
-  profitMargin?: T;
   isAvailable?: T;
   isFeatured?: T;
+  sauces?: T;
   sizeOptions?:
     | T
     | {
         sizeName?: T;
         priceModifier?: T;
         description?: T;
-        id?: T;
-      };
-  flavorOptions?:
-    | T
-    | {
-        flavorName?: T;
-        additionalCost?: T;
         id?: T;
       };
   addOns?:
@@ -459,6 +455,15 @@ export interface DealsSelect<T extends boolean = true> {
   validFrom?: T;
   validUntil?: T;
   isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sauces_select".
+ */
+export interface SaucesSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }
