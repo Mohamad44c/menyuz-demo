@@ -4,35 +4,33 @@ import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import type { Category } from '@/payload-types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import { useScroll, useMotionValueEvent } from 'framer-motion'
 
 interface CategoryContainerProps {
   categories: Category[]
   onSelectCategory?: (categoryId: number) => void
-  initialCategory?: number
-  locale?: string // Add locale prop
+  initialCategory?: number 
 }
 
 export default function CategoryContainer({
   categories,
   onSelectCategory,
-  initialCategory = 0, // Default to "All" (0)
-  locale = 'en', // Default to English
+  initialCategory = 0, // Default to "All" (0) 
 }: CategoryContainerProps) {
-  // Sort categories by sequence first (if sequence is available)
+  // Sort categories by order (Payload orderable uses _order field with fractional indexing)
   const sortedCategories = [...categories].sort((a, b) => {
-    if (a.sequence === null || b.sequence === null) {
-      // Fallback to sorting by id if sequence is not available
-      return a.id - b.id
-    }
-    return (a.sequence ?? 0) - (b.sequence ?? 0)
+    const orderA = a._order ?? ''
+    const orderB = b._order ?? ''
+    if (!orderA && !orderB) return a.id - b.id
+    if (!orderA) return 1
+    if (!orderB) return -1
+    return orderA.localeCompare(orderB)
   })
 
   const [activeCategory, setActiveCategory] = useState<number>(initialCategory)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
-  const isRTL = locale === 'ar' // Check if locale is Arabic
 
   // Framer Motion scroll handling
   const [isVisible, setIsVisible] = useState(true)
@@ -133,16 +131,16 @@ export default function CategoryContainer({
 
   return (
     <div className="w-full sticky top-0 left-0 z-50 bg-background">
-      {/* Only show arrows if not RTL (Arabic) */}
-      {!isRTL && showLeftArrow && (
-        <button
-          onClick={scrollLeft}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
-          aria-label="Scroll left"
-        >
-          <ChevronLeft className="h-5 w-5 text-primary" />
-        </button>
-      )}
+
+
+      <button
+        onClick={scrollLeft}
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
+        aria-label="Scroll left"
+      >
+        <ChevronLeft className="h-5 w-5 text-primary" />
+      </button>
+
 
       <div className="w-full container mx-auto px-2 sm:px-4 xl:px-0">
         <div
@@ -152,7 +150,7 @@ export default function CategoryContainer({
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
             WebkitOverflowScrolling: 'touch',
-            direction: isRTL ? 'rtl' : 'ltr', // Set direction based on locale
+
           }}
         >
           <button
@@ -187,16 +185,13 @@ export default function CategoryContainer({
         </div>
       </div>
 
-      {/* Only show arrows if not RTL (Arabic) */}
-      {!isRTL && showRightArrow && (
-        <button
-          onClick={scrollRight}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
-          aria-label="Scroll right"
-        >
-          <ChevronRight className="h-5 w-5 text-primary" />
-        </button>
-      )}
+      <button
+        onClick={scrollRight}
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
+        aria-label="Scroll right"
+      >
+        <ChevronRight className="h-5 w-5 text-primary" />
+      </button>
     </div>
   )
 }

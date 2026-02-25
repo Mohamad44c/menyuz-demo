@@ -14,10 +14,15 @@ interface ProductDisplayProps {
 export default function ProductDisplay({ categories, products }: ProductDisplayProps) {
   const [selectedCategory, setSelectedCategory] = useState<number>(0) // 0 represents "All"
 
-  // Sort categories by sequence
+  // Sort categories by order (Payload orderable uses _order field)
   const sortedCategories = useMemo(() => {
     return [...categories].sort((a, b) => {
-      return (a.sequence ?? 0) - (b.sequence ?? 0)
+      const orderA = a._order ?? ''
+      const orderB = b._order ?? ''
+      if (!orderA && !orderB) return a.id - b.id
+      if (!orderA) return 1
+      if (!orderB) return -1
+      return orderA.localeCompare(orderB)
     })
   }, [categories])
 
