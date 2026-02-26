@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 import { RootProvider } from '@/providers/root-provider'
 import Navbar from '@/components/custom-components/globals/navbar'
 import Footer from '@/components/custom-components/globals/footer'
-import WhatsAppContact from '@/components/custom-components/globals/whats-app-contact'
+// import WhatsAppContact from '@/components/custom-components/globals/whats-app-contact'
 
 export const metadata = {
   description: 'Chicken & Chips Menu',
@@ -39,7 +39,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
               {children}
             </main>
             <Footer settings={settings} />
-            <WhatsAppContact deliveryNumber={settings?.deliveryNumber} />
+            {/* <WhatsAppContact deliveryNumber={settings?.deliveryNumber} /> */}
           </div>
 
         </RootProvider>
