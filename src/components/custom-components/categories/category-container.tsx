@@ -147,13 +147,13 @@ export default function CategoryContainer({
     <div className="w-full sticky top-0 left-0 z-50 bg-background">
 
 
-      <button
+      {/* <button
         onClick={scrollLeft}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-sm shadow-md p-1 hover:bg-gray-100"
         aria-label="Scroll left"
       >
         <ChevronLeft className="h-5 w-5 text-primary" />
-      </button>
+      </button> */}
 
 
       <div className="w-full container mx-auto px-2 sm:px-4 xl:px-0">
@@ -171,7 +171,7 @@ export default function CategoryContainer({
             onClick={handleAllClick}
             id="category-0"
             className={cn(
-              'whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors',
+              'whitespace-nowrap px-4 py-2 rounded-sm text-sm font-medium transition-colors',
               'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
               activeCategoryValue === 0
                 ? 'bg-primary text-primary-foreground'
@@ -185,7 +185,7 @@ export default function CategoryContainer({
               id={`category-${DEALS_CATEGORY_ID}`}
               onClick={() => handleCategoryClick(DEALS_CATEGORY_ID)}
               className={cn(
-                'snap-center whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-base sm:text-sm font-medium transition-colors shrink-0',
+                'snap-center whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-sm text-base sm:text-sm font-medium transition-colors shrink-0',
                 'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
                 activeCategoryValue === DEALS_CATEGORY_ID
                   ? 'bg-primary text-primary-foreground'
@@ -201,7 +201,7 @@ export default function CategoryContainer({
               id={`category-${category.id}`}
               onClick={() => handleCategoryClick(category.id)}
               className={cn(
-                'snap-center whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-base sm:text-sm font-medium transition-colors shrink-0',
+                'snap-center whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-sm text-base sm:text-sm font-medium transition-colors shrink-0',
                 'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
                 activeCategoryValue === category.id
                   ? 'bg-primary text-primary-foreground'
@@ -216,7 +216,7 @@ export default function CategoryContainer({
 
       <button
         onClick={scrollRight}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md p-1 hover:bg-gray-100"
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-sn shadow-md p-1 hover:bg-gray-100"
         aria-label="Scroll right"
       >
         <ChevronRight className="h-5 w-5 text-primary" />
