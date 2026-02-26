@@ -36,8 +36,8 @@ export default function CartItem({ cartItem }: CartItemProps) {
   return (
     <div className="w-full flex flex-col justify-center items-center text-primary">
       <div className="w-full flex justify-between items-start mt-3">
-        <div className="w-[83px] h-[83px] relative overflow-hidden rounded-2xl">
-          {featuredImage ? (
+        {featuredImage && (
+          <div className="w-[83px] h-[83px] relative overflow-hidden rounded-2xl shrink-0">
             <Image
               src={featuredImage}
               alt={name}
@@ -47,10 +47,8 @@ export default function CartItem({ cartItem }: CartItemProps) {
               priority
               quality={100}
             />
-          ) : (
-            <div className="w-full h-full bg-gray-200 rounded-2xl animate-pulse"></div>
-          )}
-        </div>
+          </div>
+        )}
         <div className="flex flex-col justify-center gap-3 items-start flex-1 px-3 text-left">
           <h1 className="font-semibold">{name}</h1>
         </div>

@@ -53,6 +53,11 @@ export default function ProductCard({
     [sauces],
   )
 
+  const formatPrice = (price: number) => {
+    const fixed = price.toFixed(2)
+    return fixed.endsWith('.00') ? fixed.slice(0, -3) : fixed
+  }
+
   //   console.log('[CART] ', cart)
 
   const handleAddToCart = () => {
@@ -98,7 +103,7 @@ export default function ProductCard({
           )}
           onClick={() => onClick?.(id)}
         >
-          {featuredImage ? (
+          {featuredImage && (
             <div className="w-[70px] h-[70px] relative overflow-hidden rounded-2xl shrink-0">
               <Image
                 src={featuredImage}
@@ -110,17 +115,13 @@ export default function ProductCard({
                 quality={100}
               />
             </div>
-          ) : (
-            <div className="w-12 h-12 shrink-0 rounded-xl bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-400 text-lg font-medium">{name.charAt(0)}</span>
-            </div>
           )}
           <div className="flex flex-col gap-3 flex-1 justify-between min-w-0">
             <div className="flex flex-col justify-between gap-1">
               <div className="flex justify-between items-center">
                 <h3 className="text-base font-semibold">{name}</h3>
                 <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
-                  ${basePrice.toFixed(2)}
+                  ${formatPrice(basePrice)}
                 </p>
               </div>
               <p className="font-light text-xs text-gray-500 line-clamp-3">{description}</p>
@@ -131,7 +132,7 @@ export default function ProductCard({
       <DrawerContent className="max-h-[90vh]">
         <div className="p-4 h-full flex flex-col overflow-y-auto gap-4">
           <div className="flex gap-4">
-            {featuredImage ? (
+            {featuredImage && (
               <div className="w-24 h-24 relative overflow-hidden rounded-2xl shrink-0">
                 <Image
                   src={featuredImage}
@@ -143,10 +144,6 @@ export default function ProductCard({
                   sizes="100px"
                   quality={100}
                 />
-              </div>
-            ) : (
-              <div className="w-16 h-16 shrink-0 rounded-xl bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-400 text-2xl font-medium">{name.charAt(0)}</span>
               </div>
             )}
             <div className="flex-1">
@@ -172,7 +169,7 @@ export default function ProductCard({
                   >
                     {option.sizeName}
                     {option.priceModifier && option.priceModifier > 0 && (
-                      <span className="ml-1">(+${option.priceModifier.toFixed(2)})</span>
+                      <span className="ml-1">(+${formatPrice(option.priceModifier)})</span>
                     )}
                   </Button>
                 ))}
@@ -213,10 +210,10 @@ export default function ProductCard({
             <div>
               <span className="text-lg font-bold">
                 $
-                {(
+                {formatPrice(
                   basePrice +
-                  (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0)
-                ).toFixed(2)}
+                    (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0),
+                )}
               </span>
             </div>
             <button

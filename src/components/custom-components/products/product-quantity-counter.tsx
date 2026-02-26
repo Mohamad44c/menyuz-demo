@@ -16,7 +16,7 @@ export default function ProductQuantityCounter({
   isInCartGlance = false,
 }: ProductQuantityCounterProps) {
   return (
-    <div className="flex justify-center items-center text-center gap-8 rounded-md text-black text-sm h-auto">
+    <div className="flex justify-center items-center text-center gap-8 rounded-md text-primary text-sm h-auto">
       <button
         onClick={(e) => {
           e.preventDefault()
