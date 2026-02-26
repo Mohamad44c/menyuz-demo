@@ -19,6 +19,14 @@ export default async function HomePage() {
 
   const products = await payload.find({
     collection: 'products',
+    where: { isAvailable: { equals: true } },
+    limit: 0,
+    depth: 2,
+  })
+
+  const deals = await payload.find({
+    collection: 'deals',
+    where: { isActive: { equals: true } },
     limit: 0,
     depth: 2,
   })
@@ -32,7 +40,11 @@ export default async function HomePage() {
           </div>
         }
       >
-        <ProductDisplay categories={categories.docs} products={products.docs} />
+        <ProductDisplay
+          categories={categories.docs}
+          products={products.docs}
+          deals={deals.docs}
+        />
       </Suspense>
     </div>
   )

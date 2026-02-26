@@ -20,7 +20,7 @@ interface ProductCardProps {
   name: string
   description: string
   basePrice: number
-  featuredImage: string | StaticImageData
+  featuredImage?: string | StaticImageData | null
   sizeOptions?: Product['sizeOptions']
   sauces?: Product['sauces']
   className?: string
@@ -36,7 +36,7 @@ export default function ProductCard({
   name,
   description,
   basePrice,
-  featuredImage,
+  featuredImage = null,
   sizeOptions = [],
   sauces = [],
   className,
@@ -67,7 +67,7 @@ export default function ProductCard({
       price,
       size: selectedSize || 'Small',
       quantity,
-      featuredImage,
+      featuredImage: featuredImage ?? '',
       ...(selectedSizeOption && {
         sizeOptions: {
           sizeName: selectedSizeOption.sizeName,
@@ -98,29 +98,24 @@ export default function ProductCard({
           )}
           onClick={() => onClick?.(id)}
         >
-          <div className="flex flex-col gap-3 justify-center items-center">
-            <div className="w-[70px] h-[70px] relative overflow-hidden rounded-2xl">
-              {featuredImage ? (
-                <Image
-                  src={featuredImage}
-                  alt={name}
-                  className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-125"
-                  width={70}
-                  height={70}
-                  priority
-                  quality={100}
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-200 rounded-2xl animate-pulse" />
-              )}
+          {featuredImage ? (
+            <div className="w-[70px] h-[70px] relative overflow-hidden rounded-2xl shrink-0">
+              <Image
+                src={featuredImage}
+                alt={name}
+                className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-125"
+                width={70}
+                height={70}
+                priority
+                quality={100}
+              />
             </div>
-          </div>
-          <div
-            className={cn(
-              'flex flex-col gap-3 flex-1 justify-between',
-              featuredImage ? 'min-h-[70px]' : '',
-            )}
-          >
+          ) : (
+            <div className="w-12 h-12 shrink-0 rounded-xl bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-400 text-lg font-medium">{name.charAt(0)}</span>
+            </div>
+          )}
+          <div className="flex flex-col gap-3 flex-1 justify-between min-w-0">
             <div className="flex flex-col justify-between gap-1">
               <div className="flex justify-between items-center">
                 <h3 className="text-base font-semibold">{name}</h3>
@@ -136,8 +131,8 @@ export default function ProductCard({
       <DrawerContent className="max-h-[90vh]">
         <div className="p-4 h-full flex flex-col overflow-y-auto gap-4">
           <div className="flex gap-4">
-            <div className="w-24 h-24 relative overflow-hidden rounded-2xl">
-              {featuredImage ? (
+            {featuredImage ? (
+              <div className="w-24 h-24 relative overflow-hidden rounded-2xl shrink-0">
                 <Image
                   src={featuredImage}
                   alt={name}
@@ -148,10 +143,12 @@ export default function ProductCard({
                   sizes="100px"
                   quality={100}
                 />
-              ) : (
-                <div className="w-full h-full bg-gray-200 rounded-2xl animate-pulse" />
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="w-16 h-16 shrink-0 rounded-xl bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-400 text-2xl font-medium">{name.charAt(0)}</span>
+              </div>
+            )}
             <div className="flex-1">
               <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
               <DrawerDescription className="text-gray-600 mt-2">{description}</DrawerDescription>

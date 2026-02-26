@@ -6,16 +6,22 @@ import type { Category } from '@/payload-types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useScroll, useMotionValueEvent } from 'framer-motion'
 
+const DEALS_CATEGORY_ID = -1
+
 interface CategoryContainerProps {
   categories: Category[]
+  hasDeals?: boolean
   onSelectCategory?: (categoryId: number) => void
-  initialCategory?: number 
+  initialCategory?: number
+  selectedCategory?: number
 }
 
 export default function CategoryContainer({
   categories,
+  hasDeals = false,
   onSelectCategory,
-  initialCategory = 0, // Default to "All" (0) 
+  initialCategory = 0,
+  selectedCategory: controlledSelectedCategory,
 }: CategoryContainerProps) {
   // Sort categories by order (Payload orderable uses _order field with fractional indexing)
   const sortedCategories = [...categories].sort((a, b) => {
@@ -28,6 +34,8 @@ export default function CategoryContainer({
   })
 
   const [activeCategory, setActiveCategory] = useState<number>(initialCategory)
+  const activeCategoryValue =
+    controlledSelectedCategory !== undefined ? controlledSelectedCategory : activeCategory
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [_showLeftArrow, setShowLeftArrow] = useState(false)
   const [_showRightArrow, setShowRightArrow] = useState(true)
@@ -58,14 +66,20 @@ export default function CategoryContainer({
       onSelectCategory(categoryId)
     }
 
-    // Scroll the selected category into view
-    const selectedButton = document.getElementById(`category-${categoryId}`)
-    if (selectedButton) {
-      selectedButton.scrollIntoView({
+    if (categoryId === DEALS_CATEGORY_ID) {
+      document.getElementById('deals-section')?.scrollIntoView({
         behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center',
+        block: 'start',
       })
+    } else {
+      const selectedButton = document.getElementById(`category-${categoryId}`)
+      if (selectedButton) {
+        selectedButton.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center',
+        })
+      }
     }
   }
 
@@ -159,22 +173,37 @@ export default function CategoryContainer({
             className={cn(
               'whitespace-nowrap px-4 py-2 rounded-full text-sm font-medium transition-colors',
               'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
-              activeCategory === 0
+              activeCategoryValue === 0
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
             )}
           >
             All
           </button>
+          {hasDeals && (
+            <button
+              id={`category-${DEALS_CATEGORY_ID}`}
+              onClick={() => handleCategoryClick(DEALS_CATEGORY_ID)}
+              className={cn(
+                'snap-center whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-base sm:text-sm font-medium transition-colors shrink-0',
+                'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
+                activeCategoryValue === DEALS_CATEGORY_ID
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+              )}
+            >
+              Deals
+            </button>
+          )}
           {sortedCategories.map((category) => (
             <button
               key={category.id}
               id={`category-${category.id}`}
               onClick={() => handleCategoryClick(category.id)}
               className={cn(
-                'snap-center whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-base sm:text-sm font-medium transition-colors flex-shrink-0',
+                'snap-center whitespace-nowrap px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-base sm:text-sm font-medium transition-colors shrink-0',
                 'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1',
-                activeCategory === category.id
+                activeCategoryValue === category.id
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
               )}
