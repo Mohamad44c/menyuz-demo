@@ -1,6 +1,20 @@
 import Link from 'next/link'
-import { Phone, MapPin, UtensilsCrossed, Instagram } from 'lucide-react'
+import { Phone, MapPin, UtensilsCrossed, Instagram, Facebook } from 'lucide-react'
 import type { Setting } from '@/payload-types'
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden
+    >
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+    </svg>
+  )
+}
 
 interface FooterProps {
   settings: Setting | null
@@ -69,15 +83,45 @@ export default function Footer({ settings }: FooterProps) {
           <div>
             <h3 className="mb-4 text-lg font-semibold text-primary">Follow Us</h3>
             <ul className="space-y-3">
-              <li>
-                <Link
-                  href=""
-                  className="flex items-center text-primary/90"
-                >
-                  <Instagram className="me-2 size-5 text-primary" />
-                  <span>chicken_chips_menu</span>
-                </Link>
-              </li>
+              {settings?.tiktokUrl && (
+                <li>
+                  <Link
+                    href={settings.tiktokUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center text-primary/90 hover:underline"
+                  >
+                    <TikTokIcon className="me-2 size-5 shrink-0 text-primary" />
+                    <span>TikTok</span>
+                  </Link>
+                </li>
+              )}
+              {settings?.facebookUrl && (
+                <li>
+                  <Link
+                    href={settings.facebookUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center text-primary/90 hover:underline"
+                  >
+                    <Facebook className="me-2 size-5 shrink-0 text-primary" />
+                    <span>Facebook</span>
+                  </Link>
+                </li>
+              )}
+              {settings?.instagramUrl && (
+                <li>
+                  <Link
+                    href={settings.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center text-primary/90 hover:underline"
+                  >
+                    <Instagram className="me-2 size-5 shrink-0 text-primary" />
+                    <span>Instagram</span>
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </div>

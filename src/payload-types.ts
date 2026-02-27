@@ -280,6 +280,18 @@ export interface Setting {
    * Paste a Google Maps URL to display your store location for customers (e.g. https://maps.google.com/... or https://goo.gl/maps/...)
    */
   locationUrl?: string | null;
+  /**
+   * Your TikTok profile URL (e.g. https://tiktok.com/@username)
+   */
+  tiktokUrl?: string | null;
+  /**
+   * Your Facebook page URL (e.g. https://facebook.com/yourpage)
+   */
+  facebookUrl?: string | null;
+  /**
+   * Your Instagram profile URL (e.g. https://instagram.com/username)
+   */
+  instagramUrl?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -495,6 +507,9 @@ export interface SettingsSelect<T extends boolean = true> {
   deliveryNumber?: T;
   locationTitle?: T;
   locationUrl?: T;
+  tiktokUrl?: T;
+  facebookUrl?: T;
+  instagramUrl?: T;
   updatedAt?: T;
   createdAt?: T;
 }

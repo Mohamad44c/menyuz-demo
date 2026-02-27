@@ -35,6 +35,30 @@ const Settings: CollectionConfig = {
           'Paste a Google Maps URL to display your store location for customers (e.g. https://maps.google.com/... or https://goo.gl/maps/...)',
       },
     },
+    {
+      name: 'tiktokUrl',
+      label: 'TikTok URL',
+      type: 'text',
+      admin: {
+        description: 'Your TikTok profile URL (e.g. https://tiktok.com/@username)',
+      },
+    },
+    {
+      name: 'facebookUrl',
+      label: 'Facebook URL',
+      type: 'text',
+      admin: {
+        description: 'Your Facebook page URL (e.g. https://facebook.com/yourpage)',
+      },
+    },
+    {
+      name: 'instagramUrl',
+      label: 'Instagram URL',
+      type: 'text',
+      admin: {
+        description: 'Your Instagram profile URL (e.g. https://instagram.com/username)',
+      },
+    },
   ],
   // Make this collection a singleton
   versions: false,
