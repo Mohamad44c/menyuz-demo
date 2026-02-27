@@ -47,15 +47,15 @@ export default function CartGlance() {
     <>
       <Drawer disablePreventScroll={false}>
         <DrawerTrigger asChild className={cn('lg:hidden', displayCount === 0 && 'hidden')}>
-          <div className="fixed bottom-9 z-50 rounded-md bg-primary text-white w-4/5 text-center flex justify-center items-center">
+          <div className="fixed bottom-9 z-50 w-4/5 rounded-xl bg-primary text-white flex justify-center items-center">
             <div className="relative w-full mx-auto flex justify-center items-center">
               <button
-                className="flex justify-center items-center text-center flex-1 py-2 px-3 font-medium gap-4"
+                className="text-background flex justify-center items-center flex-1 py-3 px-4 font-medium gap-3"
                 onClick={() => setIsOpen(true)}
               >
                 <span>View Order</span> <ShoppingCart className="h-5 w-5" />
               </button>
-              <span className="absolute rounded-full bg-red-500 text-white font-medium p-1 w-9 h-9 flex justify-center items-center right-[-15px] top-[-15px]">
+              <span className="absolute rounded-full bg-red-500 text-white text-sm font-medium w-8 h-8 flex justify-center items-center -right-2 -top-2">
                 {displayCount}
               </span>
             </div>
@@ -64,7 +64,7 @@ export default function CartGlance() {
 
         <DrawerContent className="bg-background h-auto p-0 border-0">
           <DrawerHeader className="overflow-x-scroll">
-            <DrawerTitle className="flex flex-col gap-3">
+            <DrawerTitle className="flex flex-col gap-2">
               <span>{`Order Summary (${displayCount} ${displayCount !== 1 ? 'items' : 'item'})`}</span>
             </DrawerTitle>
             <DrawerDescription asChild>
@@ -72,15 +72,13 @@ export default function CartGlance() {
             </DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <div className="flex justify-between items-center rounded-t-md">
-              <div className="flex gap-2 flex-wrap">
-                <span className="font-medium">Total: {moneyFormatter.format(subtotal)}</span>
-              </div>
+            <div className="flex justify-between items-center gap-4 rounded-t-xl">
+              <span className="font-medium">Total: {moneyFormatter.format(subtotal)}</span>
               <a
                 href={`https://wa.me/+96176425951?text=${generateWhatsAppMessage()}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="md:text-xl font-medium text-background bg-foreground px-4 py-2 rounded-md text-center"
+                className="font-medium text-background bg-foreground px-4 py-3 rounded-xl text-center shrink-0"
                 onClick={() => setIsOpen(false)}
               >
                 Order via WhatsApp

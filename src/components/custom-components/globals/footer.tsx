@@ -36,7 +36,7 @@ export default function Footer({ settings }: FooterProps) {
               <div className="flex flex-col md:flex-row gap-2">
                 <UtensilsCrossed className="size-5 text-primary" />
               </div>
-              <span className="ms-3 text-primary/90">
+              <span className="ms-3 text-foreground/90">
                 Where great chicken meets chips!
               </span>
             </div>
@@ -55,7 +55,7 @@ export default function Footer({ settings }: FooterProps) {
                     className="flex items-center text-primary/90"
                   >
                     <Phone className="h-5 w-5 me-2 text-primary" />
-                    <span>+{settings.deliveryNumber}</span>
+                    <span className="text-foreground/90">+{settings.deliveryNumber}</span>
                   </Link>
                 </li>
               )}
@@ -67,7 +67,7 @@ export default function Footer({ settings }: FooterProps) {
                       href={settings.locationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="hover:underline"
+                      className="text-foreground/90 hover:underline"
                     >
                       {settings.locationTitle}
                     </Link>
@@ -80,19 +80,19 @@ export default function Footer({ settings }: FooterProps) {
           </div>
 
           {/* Social Info */}
-          <div>
+          <div className="flex flex-col items-center">
             <h3 className="mb-4 text-lg font-semibold text-primary">Follow Us</h3>
-            <ul className="space-y-3">
+            <ul className="flex flex-row items-center justify-center gap-4">
               {settings?.tiktokUrl && (
                 <li>
                   <Link
                     href={settings.tiktokUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center text-primary/90 hover:underline"
+                    className="flex items-center justify-center text-primary/90 transition-opacity hover:opacity-80"
+                    aria-label="TikTok"
                   >
-                    <TikTokIcon className="me-2 size-5 shrink-0 text-primary" />
-                    <span>TikTok</span>
+                    <TikTokIcon className="size-5 text-foreground" />
                   </Link>
                 </li>
               )}
@@ -102,10 +102,10 @@ export default function Footer({ settings }: FooterProps) {
                     href={settings.facebookUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center text-primary/90 hover:underline"
+                    className="flex items-center justify-center text-primary/90 transition-opacity hover:opacity-80"
+                    aria-label="Facebook"
                   >
-                    <Facebook className="me-2 size-5 shrink-0 text-primary" />
-                    <span>Facebook</span>
+                    <Facebook className="size-5 text-foreground" />
                   </Link>
                 </li>
               )}
@@ -115,10 +115,10 @@ export default function Footer({ settings }: FooterProps) {
                     href={settings.instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center text-primary/90 hover:underline"
+                    className="flex items-center justify-center text-primary/90 transition-opacity hover:opacity-80"
+                    aria-label="Instagram"
                   >
-                    <Instagram className="me-2 size-5 shrink-0 text-primary" />
-                    <span>Instagram</span>
+                    <Instagram className="size-5 text-foreground" />
                   </Link>
                 </li>
               )}

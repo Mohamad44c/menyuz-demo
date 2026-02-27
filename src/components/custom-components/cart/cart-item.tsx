@@ -34,10 +34,10 @@ export default function CartItem({ cartItem }: CartItemProps) {
   const featuredImage = resolveImageSrc(cartItem.featuredImage)
 
   return (
-    <div className="w-full flex flex-col justify-center items-center text-primary">
-      <div className="w-full flex justify-between items-start mt-3">
+    <div className="w-full flex flex-col justify-center items-center text-primary py-3">
+      <div className="w-full flex justify-between items-start gap-3">
         {featuredImage && (
-          <div className="w-[83px] h-[83px] relative overflow-hidden rounded-2xl shrink-0">
+          <div className="w-20 h-20 relative overflow-hidden rounded-xl shrink-0">
             <Image
               src={featuredImage}
               alt={name}
@@ -49,12 +49,12 @@ export default function CartItem({ cartItem }: CartItemProps) {
             />
           </div>
         )}
-        <div className="flex flex-col justify-center gap-3 items-start flex-1 px-3 text-left">
-          <h1 className="font-semibold">{name}</h1>
+        <div className="flex flex-col justify-center gap-2 items-start flex-1 min-w-0 text-left">
+          <h1 className="font-semibold text-sm">{name}</h1>
         </div>
 
-        <div className="flex flex-col justify-center items-end gap-1">
-          <span className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
+        <div className="flex flex-col justify-center items-end gap-2 shrink-0">
+          <span className="text-sm font-bold rounded-full bg-light-grey w-fit py-1.5 px-2.5">
             {moneyFormatter.format(totalPrice)}
           </span>
           <ProductQuantityCounter
