@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import {
   Drawer,
@@ -20,12 +20,18 @@ import CartListItems from './cart-list-items'
 export default function CartGlance() {
   const { cart, totalItems, totalPrice } = useCartStore()
   const [_isOpen, setIsOpen] = useState(false)
+  const [hasMounted, setHasMounted] = useState(false)
 
-  const subtotal = totalPrice() // Using the store's totalPrice function
+  useEffect(() => setHasMounted(true), [])
+
+  // Use 0/empty during SSR/initial hydration to avoid mismatch with localStorage-persisted cart
+  const displayCount = hasMounted ? totalItems() : 0
+  const subtotal = hasMounted ? totalPrice() : 0
+  const displayCart = hasMounted ? cart : []
 
   // Function to generate WhatsApp order message
   const generateWhatsAppMessage = () => {
-    const itemsList = cart
+    const itemsList = displayCart
       .map((item) => `- ${item.name} (${item.quantity} x ${moneyFormatter.format(item.basePrice)})`)
       .join('\n')
 
@@ -40,7 +46,7 @@ export default function CartGlance() {
   return (
     <>
       <Drawer disablePreventScroll={false}>
-        <DrawerTrigger asChild className={cn('lg:hidden', totalItems() === 0 && 'hidden')}>
+        <DrawerTrigger asChild className={cn('lg:hidden', displayCount === 0 && 'hidden')}>
           <div className="fixed bottom-9 z-50 rounded-md bg-primary text-white w-4/5 text-center flex justify-center items-center">
             <div className="relative w-full mx-auto flex justify-center items-center">
               <button
@@ -50,7 +56,7 @@ export default function CartGlance() {
                 <span>View Order</span> <ShoppingCart className="h-5 w-5" />
               </button>
               <span className="absolute rounded-full bg-red-500 text-white font-medium p-1 w-9 h-9 flex justify-center items-center right-[-15px] top-[-15px]">
-                {totalItems()}
+                {displayCount}
               </span>
             </div>
           </div>
@@ -59,7 +65,7 @@ export default function CartGlance() {
         <DrawerContent className="bg-background h-auto p-0 border-0">
           <DrawerHeader className="overflow-x-scroll">
             <DrawerTitle className="flex flex-col gap-3">
-              <span>{`Order Summary (${totalItems()} ${totalItems() > 1 ? 'items' : 'item'})`}</span>
+              <span>{`Order Summary (${displayCount} ${displayCount !== 1 ? 'items' : 'item'})`}</span>
             </DrawerTitle>
             <DrawerDescription asChild>
               <CartListItems />
