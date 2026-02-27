@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/drawer'
 import { useCartStore } from '@/store/cartStore'
 import ProductQuantityCounter from './product-quantity-counter'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 
 interface ProductCardProps {
@@ -125,6 +126,19 @@ export default function ProductCard({
                 </p>
               </div>
               <p className="font-light text-xs text-gray-500 line-clamp-3">{description}</p>
+              {sauceOptions.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-1">
+                  {sauceOptions.map((sauce) => (
+                    <Badge
+                      key={sauce.id}
+                      variant="secondary"
+                      className="text-[0.65rem] font-normal py-0 px-1.5"
+                    >
+                      {sauce.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
