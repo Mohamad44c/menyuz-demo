@@ -37,8 +37,8 @@ export default function CategoryContainer({
   const activeCategoryValue =
     controlledSelectedCategory !== undefined ? controlledSelectedCategory : activeCategory
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const [_showLeftArrow, setShowLeftArrow] = useState(false)
-  const [_showRightArrow, setShowRightArrow] = useState(true)
+  const [showLeftArrow, setShowLeftArrow] = useState(false)
+  const [showRightArrow, setShowRightArrow] = useState(true)
 
   // Framer Motion scroll handling
   const [_isVisible, setIsVisible] = useState(true)
@@ -145,28 +145,28 @@ export default function CategoryContainer({
 
   return (
     <div className="w-full sticky top-0 left-0 z-50 bg-background">
-
-
-      {/* <button
-        onClick={scrollLeft}
-        className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-sm shadow-md p-1 hover:bg-gray-100"
-        aria-label="Scroll left"
-      >
-        <ChevronLeft className="h-5 w-5 text-primary" />
-      </button> */}
-
-
       <div className="w-full container mx-auto px-2 sm:px-4 xl:px-0">
-        <div
-          ref={scrollContainerRef}
-          className="flex overflow-x-auto py-3 scrollbar-hide snap-x snap-mandatory scroll-smooth gap-2 sm:gap-4 justify-start sm:justify-center"
-          style={{
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch',
+        <div className="relative flex items-center gap-2">
+          {/* Left arrow - only when user has scrolled right */}
+          {showLeftArrow && (
+            <button
+              onClick={scrollLeft}
+              className="shrink-0 z-10 bg-background border border-border rounded-sm shadow-sm p-1.5 hover:bg-muted transition-colors"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft className="h-5 w-5 text-primary" />
+            </button>
+          )}
 
-          }}
-        >
+          <div
+            ref={scrollContainerRef}
+            className="flex-1 min-w-0 flex overflow-x-auto py-3 scrollbar-hide snap-x snap-mandatory scroll-smooth gap-2 sm:gap-4 justify-start sm:justify-center"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch',
+            }}
+          >
           <button
             onClick={handleAllClick}
             id="category-0"
@@ -211,16 +211,20 @@ export default function CategoryContainer({
               {category.name}
             </button>
           ))}
+          </div>
+
+          {/* Right arrow - only when there is more content to scroll */}
+          {showRightArrow && (
+            <button
+              onClick={scrollRight}
+              className="shrink-0 z-10 bg-background border border-border rounded-sm shadow-sm p-1.5 hover:bg-muted transition-colors"
+              aria-label="Scroll right"
+            >
+              <ChevronRight className="h-5 w-5 text-primary" />
+            </button>
+          )}
         </div>
       </div>
-
-      <button
-        onClick={scrollRight}
-        className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-sn shadow-md p-1 hover:bg-gray-100"
-        aria-label="Scroll right"
-      >
-        <ChevronRight className="h-5 w-5 text-primary" />
-      </button>
     </div>
   )
 }
