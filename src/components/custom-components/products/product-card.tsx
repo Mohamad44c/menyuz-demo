@@ -15,6 +15,7 @@ import { useCartStore } from '@/store/cartStore'
 import ProductQuantityCounter from './product-quantity-counter'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { ChevronRight, Plus } from 'lucide-react'
 
 interface ProductCardProps {
   id: number
@@ -49,10 +50,7 @@ export default function ProductCard({
   const [selectedSauce, setSelectedSauce] = useState<Sauce | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
-  const sauceOptions = useMemo(
-    () => sauces?.filter(isSauceObject) ?? [],
-    [sauces],
-  )
+  const sauceOptions = useMemo(() => sauces?.filter(isSauceObject) ?? [], [sauces])
 
   const formatPrice = (price: number) => {
     const fixed = price.toFixed(2)
@@ -99,7 +97,7 @@ export default function ProductCard({
       <DrawerTrigger asChild>
         <div
           className={cn(
-            'flex group gap-4 items-center justify-center rounded-2xl transition-colors duration-300 ease-in-out hover:bg-light-grey cursor-pointer',
+            'flex group gap-4 items-center justify-center rounded-2xl transition-all duration-300 ease-in-out hover:bg-light-grey cursor-pointer relative',
             className,
           )}
           onClick={() => onClick?.(id)}
@@ -115,17 +113,26 @@ export default function ProductCard({
                 priority
                 quality={100}
               />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 rounded-2xl flex items-center justify-center">
+                <Plus
+                  className="w-5 h-5 text-background drop-shadow-md"
+                  strokeWidth={2.5}
+                />
+              </div>
             </div>
           )}
           <div className="flex flex-col gap-3 flex-1 justify-between min-w-0">
             <div className="flex flex-col justify-between gap-1">
               <div className="flex justify-between items-center">
                 <h3 className="text-base font-semibold">{name}</h3>
-                <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
-                  ${formatPrice(basePrice)}
-                </p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
+                    ${formatPrice(basePrice)}
+                  </p>
+                  <ChevronRight className="w-4 h-4 text-foreground/90" />
+                </div>
               </div>
-              <p className="font-light text-xs text-gray-500 line-clamp-3">{description}</p>
+              <p className="font-light text-sm text-gray-400 line-clamp-3">{description}</p>
               {sauceOptions.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-1">
                   {sauceOptions.map((sauce) => (
@@ -161,8 +168,17 @@ export default function ProductCard({
               </div>
             )}
             <div className="flex-1">
-              <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
-              <DrawerDescription className="text-gray-600 mt-2">{description}</DrawerDescription>
+              <div className="flex items-start justify-between gap-2">
+                <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
+                <p className="text-lg font-bold shrink-0 rounded-full bg-light-grey py-1 px-2.5">
+                  ${formatPrice(
+                    basePrice +
+                      (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier ||
+                        0),
+                  )}
+                </p>
+              </div>
+              <DrawerDescription className="text-sm text-gray-400 mt-2">{description}</DrawerDescription>
             </div>
           </div>
 
@@ -204,7 +220,9 @@ export default function ProductCard({
                         ? 'bg-black text-white border-black'
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
-                    onClick={() => setSelectedSauce(selectedSauce?.id === option.id ? null : option)}
+                    onClick={() =>
+                      setSelectedSauce(selectedSauce?.id === option.id ? null : option)
+                    }
                   >
                     {option.name}
                   </Button>
@@ -231,7 +249,7 @@ export default function ProductCard({
               </span>
             </div>
             <button
-              className="bg-black text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+              className="bg-primary text-background px-6 py-2 rounded-lg font-bold hover:bg-primary/80 transition-colors"
               onClick={handleAddToCart}
             >
               Add to Cart
