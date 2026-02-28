@@ -1,11 +1,13 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useState, useMemo, useCallback } from 'react'
 import CategoryContainer from '../categories/category-container'
 import ProductListContainer from './product-list-container'
 import DealsSection from '../deals/deals-section'
 import { Category, Deal, Product } from '@/payload-types'
-import CartGlance from '../cart/cart-glance'
+
+const CartGlance = dynamic(() => import('../cart/cart-glance'), { ssr: false })
 
 const DEALS_CATEGORY_ID = -1
 
@@ -102,20 +104,28 @@ export default function ProductDisplay({ categories, products, deals }: ProductD
 
         {showProductSections && (
           <>
-            {groupedProducts.map((group) => (
-              <div key={group.category.id} className="space-y-6 px-4 xl:px-0">
-                <h2 className="text-2xl font-bold text-primary border-b pb-2">
-                  {group.category.name}
-                </h2>
+            {(() => {
+              let priorityOffset = 0
+              return groupedProducts.map((group) => {
+                const offset = priorityOffset
+                priorityOffset += group.products.length
+                return (
+                  <div key={group.category.id} className="space-y-6 px-4 xl:px-0">
+                    <h2 className="text-2xl font-bold text-primary border-b pb-2">
+                      {group.category.name}
+                    </h2>
 
-                <ProductListContainer
-                  products={group.products}
-                  onProductClick={(_productId) => {
-                    // Handle product selection if needed
-                  }}
-                />
-              </div>
-            ))}
+                    <ProductListContainer
+                      products={group.products}
+                      priorityOffset={offset}
+                      onProductClick={(_productId) => {
+                        // Handle product selection if needed
+                      }}
+                    />
+                  </div>
+                )
+              })
+            })()}
 
             {groupedProducts.length === 0 && (
               <div className="text-center py-12">

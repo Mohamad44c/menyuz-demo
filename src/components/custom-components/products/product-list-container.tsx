@@ -9,6 +9,7 @@ interface ProductListProps {
   onProductClick?: (productId: number) => void
   emptyState?: ReactNode
   isLoading?: boolean
+  priorityOffset?: number
 }
 
 export default function ProductListContainer({
@@ -16,6 +17,7 @@ export default function ProductListContainer({
   onProductClick,
   emptyState,
   isLoading = false,
+  priorityOffset = 0,
 }: ProductListProps) {
   // Handle loading state
   if (isLoading) {
@@ -39,10 +41,10 @@ export default function ProductListContainer({
     )
   }
 
-  // Render product grid
+  // Render product grid - only first 6 above-the-fold images get priority
   return (
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 container mt-7 mb-10 mx-auto">
-      {products.map((product) => {
+      {products.map((product, index) => {
         const image = product.featuredImage as Media | undefined
         const imageUrl = image?.thumbnailURL || image?.url || null
         return (
@@ -56,6 +58,7 @@ export default function ProductListContainer({
             sizeOptions={product.sizeOptions ?? undefined}
             sauces={product.sauces ?? undefined}
             onClick={onProductClick}
+            priority={index + priorityOffset < 6}
           />
         )
       })}

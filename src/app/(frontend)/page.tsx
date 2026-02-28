@@ -6,30 +6,31 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Loader } from 'lucide-react'
 
-import ProductDisplay from '@/components/custom-components/products/product-display'
+import ProductDisplayClient from '@/components/custom-components/products/product-display-client'
+import ProductDisplayShell from '@/components/custom-components/products/product-display-shell'
 
 const payload = await getPayload({ config })
 
 export default async function HomePage() {
+  const [categoriesResult, productsResult, dealsResult] = await Promise.all([
+    payload.find({ collection: 'categories', limit: 50 }),
+    payload.find({
+      collection: 'products',
+      where: { isAvailable: { equals: true } },
+      limit: 0,
+      depth: 2,
+    }),
+    payload.find({
+      collection: 'deals',
+      where: { isActive: { equals: true } },
+      limit: 0,
+      depth: 2,
+    }),
+  ])
 
-  const categories = await payload.find({
-    collection: 'categories',
-    limit: 0,
-  })
-
-  const products = await payload.find({
-    collection: 'products',
-    where: { isAvailable: { equals: true } },
-    limit: 0,
-    depth: 2,
-  })
-
-  const deals = await payload.find({
-    collection: 'deals',
-    where: { isActive: { equals: true } },
-    limit: 0,
-    depth: 2,
-  })
+  const categories = categoriesResult.docs
+  const products = productsResult.docs
+  const deals = dealsResult.docs
 
   return (
     <div className="container mx-auto">
@@ -40,11 +41,13 @@ export default async function HomePage() {
           </div>
         }
       >
-        <ProductDisplay
-          categories={categories.docs}
-          products={products.docs}
-          deals={deals.docs}
-        />
+        <ProductDisplayClient categories={categories} deals={deals}>
+          <ProductDisplayShell
+            categories={categories}
+            products={products}
+            deals={deals}
+          />
+        </ProductDisplayClient>
       </Suspense>
     </div>
   )

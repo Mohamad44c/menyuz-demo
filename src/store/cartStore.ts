@@ -94,6 +94,7 @@ export const useCartStore = create<CartStore>()(
     {
       name: 'cart-storage', // unique name for the local storage key
       storage: createJSONStorage(() => localStorage), // use localStorage
+      skipHydration: true, // defer localStorage read until after mount to avoid hydration mismatch
     },
   ),
 )
