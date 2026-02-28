@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import type { Category } from '@/payload-types'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useScroll, useMotionValueEvent } from 'framer-motion'
 
 const DEALS_CATEGORY_ID = -1
 
@@ -39,26 +38,6 @@ export default function CategoryContainer({
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [showLeftArrow, setShowLeftArrow] = useState(false)
   const [showRightArrow, setShowRightArrow] = useState(true)
-
-  // Framer Motion scroll handling
-  const [_isVisible, setIsVisible] = useState(true)
-  const [lastScrollY, setLastScrollY] = useState(0)
-  const { scrollY } = useScroll()
-
-  // Track scroll direction and update visibility
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    const currentScrollY = latest
-    // Determine if we're scrolling up or down
-    const isScrollingDown = currentScrollY > lastScrollY
-    const scrollDifference = Math.abs(currentScrollY - lastScrollY)
-
-    // Only change visibility state if we've scrolled a meaningful amount (prevents tiny scroll jitters)
-    if (scrollDifference > 10) {
-      setIsVisible(!isScrollingDown)
-    }
-
-    setLastScrollY(currentScrollY)
-  })
 
   const handleCategoryClick = (categoryId: number) => {
     setActiveCategory(categoryId)

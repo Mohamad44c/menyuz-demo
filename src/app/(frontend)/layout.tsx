@@ -17,8 +17,9 @@ export const metadata = {
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-poppins',
+  display: 'swap',
 })
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
