@@ -12,12 +12,14 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { cn, moneyFormatter } from '@/lib/utils'
+import { useSettings } from '@/providers/settings-provider'
 
 import { ShoppingCart } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import CartListItems from './cart-list-items'
 
 export default function CartGlance() {
+  const settings = useSettings()
   const { cart, totalItems, totalPrice } = useCartStore()
   const [_isOpen, setIsOpen] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
@@ -74,15 +76,19 @@ export default function CartGlance() {
           <DrawerFooter>
             <div className="flex justify-between items-center gap-4 rounded-t-xl text-foreground">
               <span className="font-medium">Total: {moneyFormatter.format(subtotal)}</span>
-              <a
-                href={`https://wa.me/+96176425951?text=${generateWhatsAppMessage()}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-primary-foreground bg-primary px-4 py-3 rounded-xl text-center shrink-0 hover:bg-primary/90 transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                Order via WhatsApp
-              </a>
+              {settings?.deliveryNumber != null ? (
+                <a
+                  href={`https://wa.me/${settings.deliveryNumber}?text=${generateWhatsAppMessage()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-primary-foreground bg-primary px-4 py-3 rounded-xl text-center shrink-0 hover:bg-primary/90 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Order via WhatsApp
+                </a>
+              ) : (
+                <span className="text-muted-foreground text-sm">No delivery number configured</span>
+              )}
             </div>
           </DrawerFooter>
         </DrawerContent>

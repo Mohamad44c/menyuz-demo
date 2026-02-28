@@ -1,6 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Phone, MapPin, UtensilsCrossed, Instagram, Facebook } from 'lucide-react'
-import type { Setting } from '@/payload-types'
+import { useSettings } from '@/providers/settings-provider'
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -16,11 +18,8 @@ function TikTokIcon({ className }: { className?: string }) {
   )
 }
 
-interface FooterProps {
-  settings: Setting | null
-}
-
-export default function Footer({ settings }: FooterProps) {
+export default function Footer() {
+  const settings = useSettings()
   const currentYear = new Date().getFullYear()
 
   return (

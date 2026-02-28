@@ -6,6 +6,7 @@ import config from '@payload-config'
 import { Poppins } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { RootProvider } from '@/providers/root-provider'
+import { SettingsProvider } from '@/providers/settings-provider'
 import Navbar from '@/components/custom-components/globals/navbar'
 import Footer from '@/components/custom-components/globals/footer'
 // import WhatsAppContact from '@/components/custom-components/globals/whats-app-contact'
@@ -33,16 +34,17 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en" className={cn(poppins.variable, 'font-poppins antialiased')} suppressHydrationWarning>
       <body>
         <RootProvider>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex flex-col justify-center items-center">
+          <SettingsProvider settings={settings}>
+            <div className="flex min-h-screen flex-col">
+              <Navbar />
+              <main className="flex flex-col justify-center items-center">
 
-              {children}
-            </main>
-            <Footer settings={settings} />
+                {children}
+              </main>
+              <Footer />
             {/* <WhatsAppContact deliveryNumber={settings?.deliveryNumber} /> */}
-          </div>
-
+            </div>
+          </SettingsProvider>
         </RootProvider>
       </body>
     </html>
