@@ -16,7 +16,7 @@ export default function Navbar() {
         <div className="mx-auto flex h-16 container items-center justify-between px-4 xl:px-0">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/en" className="text-xl font-bold text-primary">
+            <Link href="/" className="text-xl font-bold text-primary">
               Chicken & Chips Menu
             </Link>
           </div>
