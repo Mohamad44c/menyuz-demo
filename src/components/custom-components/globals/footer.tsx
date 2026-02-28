@@ -24,19 +24,22 @@ export default function Footer({ settings }: FooterProps) {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-black border-t border-border">
+    <footer className="bg-muted border-t border-border">
       <div className="container mx-auto py-10 px-4 xl:px-0">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Cafe Info */}
           <div className="flex flex-col">
-            <Link href="/" className="mb-2 text-xl font-bold text-primary">
+            <Link
+              href="/"
+              className="mb-2 text-xl font-bold text-foreground transition-colors hover:text-primary"
+            >
               Chicken & Chips Menu
             </Link>
             <div className="mt-2 flex items-center">
               <div className="flex flex-col md:flex-row gap-2">
                 <UtensilsCrossed className="size-5 text-primary" />
               </div>
-              <span className="ms-3 text-foreground/90">
+              <span className="ms-3 text-muted-foreground">
                 Where great chicken meets chips!
               </span>
             </div>
@@ -44,7 +47,7 @@ export default function Footer({ settings }: FooterProps) {
 
           {/* Contact Info */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-primary">Contact Us</h3>
+            <h3 className="mb-4 text-lg font-semibold text-foreground">Contact Us</h3>
             <ul className="space-y-3">
               {settings?.deliveryNumber != null && (
                 <li>
@@ -52,27 +55,27 @@ export default function Footer({ settings }: FooterProps) {
                     href={`https://wa.me/${settings.deliveryNumber}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center text-primary/90"
+                    className="flex items-center text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <Phone className="h-5 w-5 me-2 text-primary" />
-                    <span className="text-foreground/90">+{settings.deliveryNumber}</span>
+                    <Phone className="h-5 w-5 me-2 shrink-0 text-primary" />
+                    <span>+{settings.deliveryNumber}</span>
                   </Link>
                 </li>
               )}
               {settings?.locationTitle && (
-                <li className="flex items-center text-primary/90">
-                  <MapPin className="h-5 w-5 me-2 text-primary shrink-0" />
+                <li className="flex items-center">
+                  <MapPin className="h-5 w-5 me-2 shrink-0 text-primary" />
                   {settings.locationUrl ? (
                     <Link
                       href={settings.locationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-foreground/90 hover:underline"
+                      className="text-muted-foreground transition-colors hover:text-foreground hover:underline"
                     >
                       {settings.locationTitle}
                     </Link>
                   ) : (
-                    <span>{settings.locationTitle}</span>
+                    <span className="text-muted-foreground">{settings.locationTitle}</span>
                   )}
                 </li>
               )}
@@ -81,7 +84,7 @@ export default function Footer({ settings }: FooterProps) {
 
           {/* Social Info */}
           <div className="flex flex-col items-center">
-            <h3 className="mb-4 text-lg font-semibold text-primary">Follow Us</h3>
+            <h3 className="mb-4 text-lg font-semibold text-foreground">Follow Us</h3>
             <ul className="flex flex-row items-center justify-center gap-4">
               {settings?.tiktokUrl && (
                 <li>
@@ -89,10 +92,10 @@ export default function Footer({ settings }: FooterProps) {
                     href={settings.tiktokUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center text-primary/90 transition-opacity hover:opacity-80"
+                    className="flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
                     aria-label="TikTok"
                   >
-                    <TikTokIcon className="size-5 text-foreground" />
+                    <TikTokIcon className="size-5" />
                   </Link>
                 </li>
               )}
@@ -102,10 +105,10 @@ export default function Footer({ settings }: FooterProps) {
                     href={settings.facebookUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center text-primary/90 transition-opacity hover:opacity-80"
+                    className="flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
                     aria-label="Facebook"
                   >
-                    <Facebook className="size-5 text-foreground" />
+                    <Facebook className="size-5" />
                   </Link>
                 </li>
               )}
@@ -115,10 +118,10 @@ export default function Footer({ settings }: FooterProps) {
                     href={settings.instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center text-primary/90 transition-opacity hover:opacity-80"
+                    className="flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
                     aria-label="Instagram"
                   >
-                    <Instagram className="size-5 text-foreground" />
+                    <Instagram className="size-5" />
                   </Link>
                 </li>
               )}
@@ -127,21 +130,20 @@ export default function Footer({ settings }: FooterProps) {
         </div>
 
         <div className="mt-8 flex flex-col items-center justify-between border-t border-border pt-8 md:flex-row">
-          <p className="text-sm text-primary/80">
-            &copy; {currentYear} <span className="font-semibold">Chicken & Chips Menu</span>. All rights
+          <p className="text-sm text-muted-foreground">
+            &copy; {currentYear}{' '}
+            <span className="font-semibold text-foreground">Chicken & Chips Menu</span>. All rights
             reserved.
           </p>
           <div className="mt-4 md:mt-0">
-            <p className="text-sm text-primary/80">
-              <Link
-                href="https://www.nexus-techlb.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-black text-primary hover:underline"
-              >
-                POWERED BY NEXUS
-              </Link>
-            </p>
+            <Link
+              href="https://www.nexus-techlb.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-black text-muted-foreground transition-colors hover:text-foreground hover:underline"
+            >
+              POWERED BY NEXUS
+            </Link>
           </div>
         </div>
       </div>

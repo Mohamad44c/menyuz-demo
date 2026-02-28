@@ -51,6 +51,9 @@ export default function CartItem({ cartItem }: CartItemProps) {
         )}
         <div className="flex flex-col justify-center gap-2 items-start flex-1 min-w-0 text-left">
           <h1 className="font-semibold text-sm">{name}</h1>
+          {cartItem.description && (
+            <p className="text-xs text-gray-400 line-clamp-2">{cartItem.description}</p>
+          )}
         </div>
 
         <div className="flex flex-col justify-center items-end gap-2 shrink-0">

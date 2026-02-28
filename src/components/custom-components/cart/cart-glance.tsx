@@ -62,7 +62,7 @@ export default function CartGlance() {
           </div>
         </DrawerTrigger>
 
-        <DrawerContent className="bg-background h-auto p-0 border-0">
+        <DrawerContent className="h-auto p-0 border-0">
           <DrawerHeader className="overflow-x-scroll">
             <DrawerTitle className="flex flex-col gap-2">
               <span>{`Order Summary (${displayCount} ${displayCount !== 1 ? 'items' : 'item'})`}</span>

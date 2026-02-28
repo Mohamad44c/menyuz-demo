@@ -67,6 +67,7 @@ export default function ProductCard({
     const cartItem = {
       id: id.toString(),
       name,
+      description,
       basePrice,
       price,
       size: selectedSize || 'Small',
