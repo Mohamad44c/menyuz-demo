@@ -47,15 +47,15 @@ export default function CartGlance() {
     <>
       <Drawer disablePreventScroll={false}>
         <DrawerTrigger asChild className={cn('lg:hidden', displayCount === 0 && 'hidden')}>
-          <div className="fixed bottom-9 z-50 w-4/5 rounded-xl bg-primary text-white flex justify-center items-center">
+          <div className="fixed bottom-9 z-50 w-4/5 rounded-xl bg-primary text-primary-foreground flex justify-center items-center">
             <div className="relative w-full mx-auto flex justify-center items-center">
               <button
-                className="text-background flex justify-center items-center flex-1 py-3 px-4 font-medium gap-3"
+                className="flex justify-center items-center flex-1 py-3 px-4 font-medium gap-3"
                 onClick={() => setIsOpen(true)}
               >
                 <span>View Order</span> <ShoppingCart className="h-5 w-5" />
               </button>
-              <span className="absolute rounded-full bg-red-500 text-white text-sm font-medium w-8 h-8 flex justify-center items-center -right-2 -top-2">
+              <span className="absolute rounded-full bg-foreground text-background text-sm font-medium w-8 h-8 flex justify-center items-center -right-2 -top-2">
                 {displayCount}
               </span>
             </div>
@@ -72,13 +72,13 @@ export default function CartGlance() {
             </DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <div className="flex justify-between items-center gap-4 rounded-t-xl">
+            <div className="flex justify-between items-center gap-4 rounded-t-xl text-foreground">
               <span className="font-medium">Total: {moneyFormatter.format(subtotal)}</span>
               <a
                 href={`https://wa.me/+96176425951?text=${generateWhatsAppMessage()}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-background bg-foreground px-4 py-3 rounded-xl text-center shrink-0"
+                className="font-medium text-primary-foreground bg-primary px-4 py-3 rounded-xl text-center shrink-0 hover:bg-primary/90 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 Order via WhatsApp

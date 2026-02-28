@@ -34,7 +34,7 @@ export default function CartItem({ cartItem }: CartItemProps) {
   const featuredImage = resolveImageSrc(cartItem.featuredImage)
 
   return (
-    <div className="w-full flex flex-col justify-center items-center text-primary py-3">
+    <div className="w-full flex flex-col justify-center items-center text-foreground py-3">
       <div className="w-full flex justify-between items-start gap-3">
         {featuredImage && (
           <div className="w-20 h-20 relative overflow-hidden rounded-xl shrink-0">
@@ -52,12 +52,12 @@ export default function CartItem({ cartItem }: CartItemProps) {
         <div className="flex flex-col justify-center gap-2 items-start flex-1 min-w-0 text-left">
           <h1 className="font-semibold text-sm">{name}</h1>
           {cartItem.description && (
-            <p className="text-xs text-gray-400 line-clamp-2">{cartItem.description}</p>
+            <p className="text-xs text-muted-foreground line-clamp-2">{cartItem.description}</p>
           )}
         </div>
 
         <div className="flex flex-col justify-center items-end gap-2 shrink-0">
-          <span className="text-sm font-bold rounded-full bg-light-grey w-fit py-1.5 px-2.5">
+          <span className="text-sm font-bold rounded-full bg-muted text-foreground w-fit py-1.5 px-2.5">
             {moneyFormatter.format(totalPrice)}
           </span>
           <ProductQuantityCounter
@@ -69,6 +69,7 @@ export default function CartItem({ cartItem }: CartItemProps) {
               decrementQuantity(productId)
             }}
             isInCartGlance={true}
+            variant="foreground"
           />
         </div>
       </div>

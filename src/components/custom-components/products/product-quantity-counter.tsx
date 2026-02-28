@@ -1,12 +1,15 @@
 'use client'
 
 import { MinusIcon, Plus, Trash } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 type ProductQuantityCounterProps = {
   value: number
   onIncrement: (value: number) => void
   onDecrement: (value: number) => void
   isInCartGlance: boolean
+  /** Use foreground color instead of primary for better visibility in light mode */
+  variant?: 'primary' | 'foreground'
 }
 
 export default function ProductQuantityCounter({
@@ -14,9 +17,16 @@ export default function ProductQuantityCounter({
   onIncrement,
   onDecrement,
   isInCartGlance = false,
+  variant = 'primary',
 }: ProductQuantityCounterProps) {
+  const iconClass = variant === 'foreground' ? 'text-foreground' : 'text-primary'
   return (
-    <div className="flex justify-center items-center text-center gap-8 rounded-md text-primary text-sm h-auto">
+    <div
+      className={cn(
+        'flex justify-center items-center text-center gap-8 rounded-md text-sm h-auto',
+        iconClass,
+      )}
+    >
       <button
         onClick={(e) => {
           e.preventDefault()
@@ -25,9 +35,9 @@ export default function ProductQuantityCounter({
         aria-label={isInCartGlance && value === 1 ? 'Remove item' : 'Decrease quantity'}
       >
         {isInCartGlance && value === 1 ? (
-          <Trash className="w-7 h-7 text-primary rounded-full p-1" />
+          <Trash className={cn('w-7 h-7 rounded-full p-1', iconClass)} />
         ) : (
-          <MinusIcon className="w-7 h-7 text-primary rounded-full p-1" strokeWidth={2} />
+          <MinusIcon className={cn('w-7 h-7 rounded-full p-1', iconClass)} strokeWidth={2} />
         )}
       </button>
 
@@ -40,7 +50,7 @@ export default function ProductQuantityCounter({
         }}
         aria-label="Increase quantity"
       >
-        <Plus className="w-7 h-7 text-primary rounded-full p-1" strokeWidth={2} />
+        <Plus className={cn('w-7 h-7 rounded-full p-1', iconClass)} strokeWidth={2} />
       </button>
     </div>
   )
