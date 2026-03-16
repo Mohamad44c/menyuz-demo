@@ -207,6 +207,7 @@ export interface Product {
 export interface Media {
   id: number;
   alt: string;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -274,13 +275,44 @@ export interface Deal {
  */
 export interface Setting {
   id: number;
+  /**
+   * Displayed in the navbar, footer, and browser tab title.
+   */
+  restaurantName: string;
+  /**
+   * Short slogan shown in the footer (e.g. "Best burgers in town!").
+   */
+  tagline?: string | null;
+  /**
+   * Navbar logo. If left empty the restaurant name text is shown instead. Recommended: transparent PNG, ~200x60 px.
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Main accent color used for buttons, headings, icons. e.g. #FFD700
+   */
+  primaryColor?: string | null;
+  /**
+   * Text / icon color on top of the primary color. e.g. #1a1a1a
+   */
+  primaryForegroundColor?: string | null;
+  /**
+   * Prepended to every price on the menu (e.g. £, $, €, LBP).
+   */
+  currencySymbol?: string | null;
+  /**
+   * Toggle to hide the deals/offers section from the menu.
+   */
+  showDealsSection?: boolean | null;
+  /**
+   * International format without the + (e.g. 447700900123).
+   */
   deliveryNumber: number;
   /**
    * Display name for your store location (e.g. "Main Street Branch")
    */
   locationTitle?: string | null;
   /**
-   * Paste a Google Maps URL to display your store location for customers (e.g. https://maps.google.com/... or https://goo.gl/maps/...)
+   * Google Maps URL for the store (e.g. https://goo.gl/maps/...)
    */
   locationUrl?: string | null;
   /**
@@ -490,6 +522,7 @@ export interface SaucesSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -507,6 +540,13 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
+  restaurantName?: T;
+  tagline?: T;
+  logo?: T;
+  primaryColor?: T;
+  primaryForegroundColor?: T;
+  currencySymbol?: T;
+  showDealsSection?: T;
   deliveryNumber?: T;
   locationTitle?: T;
   locationUrl?: T;
