@@ -18,7 +18,7 @@ import { getPayload } from 'payload'
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 loadEnv({ path: resolve(__dirname, '../.env.local') })
 
-const { default: config } = await import('../src/payload.config.ts')
+const { default: config } = await import('../src/payload.config')
 
 // ---------------------------------------------------------------------------
 // Data
