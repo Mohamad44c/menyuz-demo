@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import type { Deal, Media, Product } from '@/payload-types'
 import { useCartStore } from '@/store/cartStore'
 import { Button } from '@/components/ui/button'
+import { useSettings } from '@/providers/settings-provider'
 
 function isProductObject(p: number | Product): p is Product {
   return typeof p === 'object' && p !== null && 'name' in p
@@ -17,6 +18,8 @@ interface DealCardProps {
 
 export default function DealCard({ deal, className }: DealCardProps) {
   const addToCart = useCartStore((state) => state.addToCart)
+  const settings = useSettings()
+  const currencySymbol = settings?.currencySymbol ?? '$'
 
   const image = deal.featuredImage as Media | undefined
   const imageUrl = image?.thumbnailURL || image?.url || null
@@ -76,10 +79,10 @@ export default function DealCard({ deal, className }: DealCardProps) {
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             {deal.originalTotalPrice != null && deal.originalTotalPrice > deal.offerPrice && (
               <span className="text-sm text-gray-500 line-through">
-                ${deal.originalTotalPrice.toFixed(2)}
+                {currencySymbol}{deal.originalTotalPrice.toFixed(2)}
               </span>
             )}
-            <span className="text-lg font-bold text-primary">${deal.offerPrice.toFixed(2)}</span>
+            <span className="text-lg font-bold text-primary">{currencySymbol}{deal.offerPrice.toFixed(2)}</span>
             {deal.discountPercentage != null && deal.discountPercentage > 0 && (
               <span className="text-xs font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                 {Math.round(deal.discountPercentage)}% OFF
