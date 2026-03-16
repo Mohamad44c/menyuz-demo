@@ -12,7 +12,7 @@ import ProductDisplayShell from '@/components/custom-components/products/product
 const payload = await getPayload({ config })
 
 export default async function HomePage() {
-  const [categoriesResult, productsResult, dealsResult] = await Promise.all([
+  const [categoriesResult, productsResult, dealsResult, settingsResult] = await Promise.all([
     payload.find({ collection: 'categories', limit: 50 }),
     payload.find({
       collection: 'products',
@@ -26,11 +26,16 @@ export default async function HomePage() {
       limit: 0,
       depth: 2,
     }),
+    payload.find({ collection: 'settings', limit: 1 }),
   ])
 
   const categories = categoriesResult.docs
   const products = productsResult.docs
-  const deals = dealsResult.docs
+  const settings = settingsResult.docs[0] ?? null
+
+  const showDeals = settings?.showDealsSection !== false
+  const deals = showDeals ? dealsResult.docs : []
+  const currencySymbol = settings?.currencySymbol ?? '$'
 
   return (
     <div className="container mx-auto">
@@ -46,6 +51,7 @@ export default async function HomePage() {
             categories={categories}
             products={products}
             deals={deals}
+            currencySymbol={currencySymbol}
           />
         </ProductDisplayClient>
       </Suspense>
