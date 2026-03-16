@@ -14,12 +14,14 @@ interface ProductDisplayShellProps {
   categories: Category[]
   products: Product[]
   deals: Deal[]
+  currencySymbol?: string
 }
 
 export default function ProductDisplayShell({
   categories,
   products,
   deals,
+  currencySymbol = '$',
 }: ProductDisplayShellProps) {
   const sortedCategories = [...categories].sort((a, b) => {
     const orderA = a._order ?? ''
@@ -82,6 +84,7 @@ export default function ProductDisplayShell({
                       featuredImage={imageUrl || undefined}
                       sizeOptions={product.sizeOptions ?? undefined}
                       sauces={product.sauces ?? undefined}
+                      currencySymbol={currencySymbol}
                     >
                       <ProductCardView
                         id={product.id}
@@ -91,6 +94,7 @@ export default function ProductDisplayShell({
                         featuredImage={imageUrl || undefined}
                         sauces={product.sauces ?? undefined}
                         priority={priority}
+                        currencySymbol={currencySymbol}
                       />
                     </ProductCardWrapper>
                   )

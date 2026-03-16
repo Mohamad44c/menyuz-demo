@@ -30,6 +30,7 @@ interface ProductCardWrapperProps {
   sauces?: Product['sauces']
   children: ReactNode
   onClick?: (id: number) => void
+  currencySymbol?: string
 }
 
 function formatPrice(price: number) {
@@ -47,6 +48,7 @@ export default function ProductCardWrapper({
   sauces = [],
   children,
   onClick,
+  currencySymbol = '$',
 }: ProductCardWrapperProps) {
   const addToCart = useCartStore((state) => state.addToCart)
   const [quantity, setQuantity] = useState(1)
@@ -115,7 +117,7 @@ export default function ProductCardWrapper({
               <div className="flex items-start justify-between gap-2">
                 <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
                 <p className="text-lg font-bold shrink-0 rounded-full bg-light-grey py-1 px-2.5">
-                  ${formatPrice(
+                  {currencySymbol}{formatPrice(
                     basePrice +
                       (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier ||
                         0),
@@ -146,7 +148,7 @@ export default function ProductCardWrapper({
                   >
                     {option.sizeName}
                     {option.priceModifier && option.priceModifier > 0 && (
-                      <span className="ml-1">(+${formatPrice(option.priceModifier)})</span>
+                      <span className="ml-1">(+{currencySymbol}{formatPrice(option.priceModifier)})</span>
                     )}
                   </Button>
                 ))}
@@ -189,8 +191,7 @@ export default function ProductCardWrapper({
           <div className="mt-auto pt-4 flex justify-between items-center border-t">
             <div>
               <span className="text-lg font-bold">
-                $
-                {formatPrice(
+                {currencySymbol}{formatPrice(
                   basePrice +
                     (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0),
                 )}

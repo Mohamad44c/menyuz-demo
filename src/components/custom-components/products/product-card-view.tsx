@@ -17,6 +17,7 @@ interface ProductCardViewProps {
   sauces?: Product['sauces']
   className?: string
   priority?: boolean
+  currencySymbol?: string
 }
 
 function formatPrice(price: number) {
@@ -32,6 +33,7 @@ export default function ProductCardView({
   sauces = [],
   className,
   priority = false,
+  currencySymbol = '$',
 }: ProductCardViewProps) {
   const sauceOptions = sauces?.filter(isSauceObject) ?? []
 
@@ -67,7 +69,7 @@ export default function ProductCardView({
             <h3 className="text-base font-semibold">{name}</h3>
             <div className="flex items-center gap-1.5">
               <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
-                ${formatPrice(basePrice)}
+                {currencySymbol}{formatPrice(basePrice)}
               </p>
               <ChevronRight className="w-4 h-4 text-foreground/90" />
             </div>
