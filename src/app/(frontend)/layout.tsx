@@ -36,16 +36,29 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
   const settings = await getSettings()
 
-  const hasColorOverride = settings?.primaryColor || settings?.primaryForegroundColor
+  // Light values (or fall through to globals.css defaults if unset)
+  const lightPrimary = settings?.primaryColor ?? ''
+  const lightFg = settings?.primaryForegroundColor ?? ''
+  // Dark values fall back to the light value when not explicitly set
+  const darkPrimary = settings?.primaryColorDark ?? lightPrimary
+  const darkFg = settings?.primaryForegroundColorDark ?? lightFg
+
+  const hasColorOverride = lightPrimary || lightFg || darkPrimary || darkFg
 
   return (
     <html lang="en" className={cn(poppins.variable, 'font-poppins antialiased')} suppressHydrationWarning>
       <head>
         {hasColorOverride && (
-          <style>{`:root {
-            ${settings?.primaryColor ? `--primary: ${settings.primaryColor};` : ''}
-            ${settings?.primaryForegroundColor ? `--primary-foreground: ${settings.primaryForegroundColor};` : ''}
-          }`}</style>
+          <style>{`
+            :root {
+              ${lightPrimary ? `--primary: ${lightPrimary};` : ''}
+              ${lightFg ? `--primary-foreground: ${lightFg};` : ''}
+            }
+            .dark {
+              ${darkPrimary ? `--primary: ${darkPrimary};` : ''}
+              ${darkFg ? `--primary-foreground: ${darkFg};` : ''}
+            }
+          `}</style>
         )}
       </head>
       <body>

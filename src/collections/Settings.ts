@@ -11,56 +11,217 @@ const Settings: CollectionConfig = {
     update: () => true,
   },
   fields: [
+    // ─── Branding ───────────────────────────────────────────────────────────
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'restaurantName',
+          label: 'Restaurant / Cafe Name',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'Displayed in the navbar, footer, and browser tab title.',
+            width: '50%',
+          },
+        },
+        {
+          name: 'tagline',
+          label: 'Tagline',
+          type: 'text',
+          admin: {
+            description: 'Short slogan shown in the footer (e.g. "Best burgers in town!").',
+            width: '50%',
+          },
+        },
+      ],
+    },
+    {
+      name: 'logo',
+      label: 'Logo',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description:
+          'Navbar logo. If left empty the restaurant name text is shown instead. Recommended: transparent PNG, ~200x60 px.',
+      },
+    },
+    // ─── Colors ─────────────────────────────────────────────────────────────
+    {
+      type: 'collapsible',
+      label: 'Brand Colors',
+      admin: {
+        description:
+          'Override the default theme colors. Click the swatch to open the color wheel, or type any CSS color value (hex, oklch, hsl, rgb). Dark mode falls back to the light value when left empty.',
+        initCollapsed: false,
+      },
+      fields: [
+        // Light mode
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'primaryColor',
+              label: 'Primary Color — Light',
+              type: 'text',
+              admin: {
+                description: 'Main accent color (buttons, headings, icons) in light mode.',
+                placeholder: 'e.g. #FFD700',
+                width: '50%',
+                components: {
+                  Field: '@/components/admin/color-picker-field#ColorPickerField',
+                },
+              },
+            },
+            {
+              name: 'primaryForegroundColor',
+              label: 'Primary Foreground — Light',
+              type: 'text',
+              admin: {
+                description: 'Text / icon color rendered on top of the primary color in light mode.',
+                placeholder: 'e.g. #1a1a1a',
+                width: '50%',
+                components: {
+                  Field: '@/components/admin/color-picker-field#ColorPickerField',
+                },
+              },
+            },
+          ],
+        },
+        // Dark mode
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'primaryColorDark',
+              label: 'Primary Color — Dark',
+              type: 'text',
+              admin: {
+                description: 'Primary color in dark mode. Leave empty to reuse the light value.',
+                placeholder: 'e.g. #FFD700',
+                width: '50%',
+                components: {
+                  Field: '@/components/admin/color-picker-field#ColorPickerField',
+                },
+              },
+            },
+            {
+              name: 'primaryForegroundColorDark',
+              label: 'Primary Foreground — Dark',
+              type: 'text',
+              admin: {
+                description: 'Foreground color in dark mode. Leave empty to reuse the light value.',
+                placeholder: 'e.g. #1a1a1a',
+                width: '50%',
+                components: {
+                  Field: '@/components/admin/color-picker-field#ColorPickerField',
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+    // ─── Menu Configuration ──────────────────────────────────────────────────
+    {
+      type: 'collapsible',
+      label: 'Menu Configuration',
+      admin: { initCollapsed: false },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'currencySymbol',
+              label: 'Currency Symbol',
+              type: 'text',
+              defaultValue: '$',
+              admin: {
+                description: 'Prepended to every price on the menu (e.g. £, $, €, LBP).',
+                width: '50%',
+              },
+            },
+            {
+              name: 'showDealsSection',
+              label: 'Show Deals Section',
+              type: 'checkbox',
+              defaultValue: true,
+              admin: {
+                description: 'Toggle to hide the deals/offers section from the menu.',
+                width: '50%',
+              },
+            },
+          ],
+        },
+      ],
+    },
+    // ─── Contact & Location ──────────────────────────────────────────────────
     {
       name: 'deliveryNumber',
-      label: 'Delivery Number',
+      label: 'WhatsApp / Delivery Number',
       type: 'number',
       required: true,
       min: 1,
-    },
-    {
-      name: 'locationTitle',
-      label: 'Location Title',
-      type: 'text',
       admin: {
-        description: 'Display name for your store location (e.g. "Main Street Branch")',
+        description: 'International format without the + (e.g. 96178830254).',
       },
     },
     {
-      name: 'locationUrl',
-      label: 'Location (Google Maps)',
-      type: 'text',
-      admin: {
-        description:
-          'Paste a Google Maps URL to display your store location for customers (e.g. https://maps.google.com/... or https://goo.gl/maps/...)',
-      },
+      type: 'row',
+      fields: [
+        {
+          name: 'locationTitle',
+          label: 'Location Title',
+          type: 'text',
+          admin: {
+            description: 'Display name for your store location (e.g. "Main Street Branch")',
+            width: '50%',
+          },
+        },
+        {
+          name: 'locationUrl',
+          label: 'Location (Google Maps)',
+          type: 'text',
+          admin: {
+            description: 'Google Maps URL for the store (e.g. https://goo.gl/maps/...)',
+            width: '50%',
+          },
+        },
+      ],
     },
+    // ─── Social Links ────────────────────────────────────────────────────────
     {
-      name: 'tiktokUrl',
-      label: 'TikTok URL',
-      type: 'text',
-      admin: {
-        description: 'Your TikTok profile URL (e.g. https://tiktok.com/@username)',
-      },
-    },
-    {
-      name: 'facebookUrl',
-      label: 'Facebook URL',
-      type: 'text',
-      admin: {
-        description: 'Your Facebook page URL (e.g. https://facebook.com/yourpage)',
-      },
-    },
-    {
-      name: 'instagramUrl',
-      label: 'Instagram URL',
-      type: 'text',
-      admin: {
-        description: 'Your Instagram profile URL (e.g. https://instagram.com/username)',
-      },
+      type: 'collapsible',
+      label: 'Social Media Links',
+      admin: { initCollapsed: true },
+      fields: [
+        {
+          name: 'tiktokUrl',
+          label: 'TikTok URL',
+          type: 'text',
+          admin: {
+            description: 'Your TikTok profile URL (e.g. https://tiktok.com/@username)',
+          },
+        },
+        {
+          name: 'facebookUrl',
+          label: 'Facebook URL',
+          type: 'text',
+          admin: {
+            description: 'Your Facebook page URL (e.g. https://facebook.com/yourpage)',
+          },
+        },
+        {
+          name: 'instagramUrl',
+          label: 'Instagram URL',
+          type: 'text',
+          admin: {
+            description: 'Your Instagram profile URL (e.g. https://instagram.com/username)',
+          },
+        },
+      ],
     },
   ],
-  // Make this collection a singleton
   versions: false,
   timestamps: true,
   endpoints: [],

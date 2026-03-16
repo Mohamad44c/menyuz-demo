@@ -288,13 +288,21 @@ export interface Setting {
    */
   logo?: (number | null) | Media;
   /**
-   * Main accent color used for buttons, headings, icons. e.g. #FFD700
+   * Main accent color (buttons, headings, icons) in light mode.
    */
   primaryColor?: string | null;
   /**
-   * Text / icon color on top of the primary color. e.g. #1a1a1a
+   * Text / icon color rendered on top of the primary color in light mode.
    */
   primaryForegroundColor?: string | null;
+  /**
+   * Primary color in dark mode. Leave empty to reuse the light value.
+   */
+  primaryColorDark?: string | null;
+  /**
+   * Foreground color in dark mode. Leave empty to reuse the light value.
+   */
+  primaryForegroundColorDark?: string | null;
   /**
    * Prepended to every price on the menu (e.g. £, $, €, LBP).
    */
@@ -304,7 +312,7 @@ export interface Setting {
    */
   showDealsSection?: boolean | null;
   /**
-   * International format without the + (e.g. 447700900123).
+   * International format without the + (e.g. 96178830254).
    */
   deliveryNumber: number;
   /**
@@ -545,6 +553,8 @@ export interface SettingsSelect<T extends boolean = true> {
   logo?: T;
   primaryColor?: T;
   primaryForegroundColor?: T;
+  primaryColorDark?: T;
+  primaryForegroundColorDark?: T;
   currencySymbol?: T;
   showDealsSection?: T;
   deliveryNumber?: T;
