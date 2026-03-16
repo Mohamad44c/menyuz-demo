@@ -26,22 +26,20 @@ export default function Footer() {
     <footer className="bg-muted border-t border-border">
       <div className="container mx-auto py-10 px-4 xl:px-0">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {/* Cafe Info */}
+          {/* Brand Info */}
           <div className="flex flex-col">
             <Link
               href="/"
               className="mb-2 text-xl font-bold text-foreground transition-colors hover:text-primary"
             >
-              Chicken & Chips Menu
+              {settings?.restaurantName ?? 'Restaurant Menu'}
             </Link>
-            <div className="mt-2 flex items-center">
-              <div className="flex flex-col md:flex-row gap-2">
-                <UtensilsCrossed className="size-5 text-primary" />
+            {settings?.tagline && (
+              <div className="mt-2 flex items-center">
+                <UtensilsCrossed className="size-5 text-primary shrink-0" />
+                <span className="ms-3 text-muted-foreground">{settings.tagline}</span>
               </div>
-              <span className="ms-3 text-muted-foreground">
-                Where great chicken meets chips!
-              </span>
-            </div>
+            )}
           </div>
 
           {/* Contact Info */}
@@ -131,8 +129,10 @@ export default function Footer() {
         <div className="mt-8 flex flex-col items-center justify-between border-t border-border pt-8 md:flex-row">
           <p className="text-sm text-muted-foreground">
             &copy; {currentYear}{' '}
-            <span className="font-semibold text-foreground">Chicken & Chips Menu</span>. All rights
-            reserved.
+            <span className="font-semibold text-foreground">
+              {settings?.restaurantName ?? 'Restaurant Menu'}
+            </span>
+            . All rights reserved.
           </p>
           <div className="mt-4 md:mt-0">
             <Link

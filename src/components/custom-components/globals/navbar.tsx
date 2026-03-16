@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
+import NextImage from 'next/image'
 import ThemeToggle from '../theme-toggle'
 import { useSettings } from '@/providers/settings-provider'
-
-import Image from 'next/image'
+import type { Media } from '@/payload-types'
 import WhatsAppContactIcon from '@/assets/whats-app-contact.svg'
 
 export default function Navbar() {
@@ -27,14 +27,28 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [handleScroll])
 
+  const logo = settings?.logo as Media | null | undefined
+  const logoUrl = logo?.url ?? null
+  const restaurantName = settings?.restaurantName ?? 'Restaurant Menu'
+
   return (
     <>
       <nav className="w-full border-b border-gray-200 sticky top-0 z-50 bg-background">
         <div className="mx-auto flex h-16 container items-center justify-between px-4 xl:px-0">
-          {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-primary">
-              Chicken & Chips Menu
+            <Link href="/" aria-label={restaurantName}>
+              {logoUrl ? (
+                <NextImage
+                  src={logoUrl}
+                  alt={restaurantName}
+                  width={160}
+                  height={48}
+                  className="h-10 w-auto object-contain"
+                  priority
+                />
+              ) : (
+                <span className="text-xl font-bold text-primary">{restaurantName}</span>
+              )}
             </Link>
           </div>
           <div className="flex items-center gap-4">
@@ -46,7 +60,7 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 aria-label="Contact us on WhatsApp"
               >
-                <Image
+                <NextImage
                   src={WhatsAppContactIcon}
                   alt="WhatsApp"
                   width={45}
@@ -58,7 +72,6 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Scroll Progress Bar */}
         <div
           className="h-[2px] bg-primary origin-left"
           style={{ transform: `scaleX(${scrollProgress})` }}
