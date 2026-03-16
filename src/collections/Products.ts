@@ -91,17 +91,6 @@ export const Products: CollectionConfig = {
       type: 'collapsible',
       label: 'Product Variations',
       fields: [
-        // Sauces
-        {
-          name: 'sauces',
-          type: 'relationship',
-          relationTo: 'sauces',
-          hasMany: true,
-          label: 'Available Sauces',
-          admin: {
-            description: 'Select one or multiple sauces available for this product',
-          },
-        },
         // Size options
         {
           name: 'sizeOptions',

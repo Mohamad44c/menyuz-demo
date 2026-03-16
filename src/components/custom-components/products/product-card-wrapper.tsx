@@ -3,8 +3,8 @@
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
 import { DEFAULTS } from '@/lib/defaults'
-import type { Product, Sauce } from '@/payload-types'
-import { useMemo, useState } from 'react'
+import type { Product } from '@/payload-types'
+import { useState } from 'react'
 import {
   Drawer,
   DrawerContent,
@@ -17,10 +17,6 @@ import ProductQuantityCounter from './product-quantity-counter'
 import { Button } from '@/components/ui/button'
 import type { ReactNode } from 'react'
 
-function isSauceObject(s: number | Sauce): s is Sauce {
-  return typeof s === 'object' && s !== null && 'name' in s
-}
-
 interface ProductCardWrapperProps {
   id: number
   name: string
@@ -28,7 +24,6 @@ interface ProductCardWrapperProps {
   basePrice: number
   featuredImage?: string | StaticImageData | null
   sizeOptions?: Product['sizeOptions']
-  sauces?: Product['sauces']
   children: ReactNode
   onClick?: (id: number) => void
   currencySymbol?: string
@@ -46,7 +41,6 @@ export default function ProductCardWrapper({
   basePrice,
   featuredImage = null,
   sizeOptions = [],
-  sauces = [],
   children,
   onClick,
   currencySymbol = DEFAULTS.currencySymbol,
@@ -54,10 +48,7 @@ export default function ProductCardWrapper({
   const addToCart = useCartStore((state) => state.addToCart)
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  const [selectedSauce, setSelectedSauce] = useState<Sauce | null>(null)
   const [isOpen, setIsOpen] = useState(false)
-
-  const sauceOptions = useMemo(() => sauces?.filter(isSauceObject) ?? [], [sauces])
 
   const handleAddToCart = () => {
     const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
@@ -78,12 +69,6 @@ export default function ProductCardWrapper({
           sizeName: selectedSizeOption.sizeName,
           priceModifier: selectedSizeOption.priceModifier || 0,
           description: selectedSizeOption.description || undefined,
-        },
-      }),
-      ...(selectedSauce && {
-        sauce: {
-          id: selectedSauce.id,
-          name: selectedSauce.name,
         },
       }),
     }
@@ -157,30 +142,6 @@ export default function ProductCardWrapper({
             </div>
           )}
 
-          {sauceOptions.length > 0 && (
-            <div className="flex items-center gap-4">
-              <h3 className="font-medium">Select Sauce</h3>
-              <div className="flex flex-wrap gap-2">
-                {sauceOptions.map((option) => (
-                  <Button
-                    variant="outline"
-                    key={option.id}
-                    className={cn(
-                      'border rounded-lg h-8 text-sm transition-colors',
-                      selectedSauce?.id === option.id
-                        ? 'bg-black text-white border-black'
-                        : 'border-gray-300 hover:border-gray-400',
-                    )}
-                    onClick={() =>
-                      setSelectedSauce(selectedSauce?.id === option.id ? null : option)
-                    }
-                  >
-                    {option.name}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
           <ProductQuantityCounter
             value={quantity}
             onIncrement={() => setQuantity(quantity + 1)}

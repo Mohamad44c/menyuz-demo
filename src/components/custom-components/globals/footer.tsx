@@ -149,7 +149,8 @@ export default function Footer() {
               href="https://www.nexus-techlb.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-black text-muted-foreground transition-colors hover:text-foreground hover:underline"
+              className="text-sm font-black transition-colors hover:underline"
+              style={{ color: '#E4B938' }}
             >
               POWERED BY NEXUS
             </Link>

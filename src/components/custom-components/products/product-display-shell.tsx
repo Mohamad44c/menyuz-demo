@@ -83,7 +83,6 @@ export default function ProductDisplayShell({
                       basePrice={product.basePrice}
                       featuredImage={imageUrl || undefined}
                       sizeOptions={product.sizeOptions ?? undefined}
-                      sauces={product.sauces ?? undefined}
                       currencySymbol={currencySymbol}
                     >
                       <ProductCardView
@@ -92,7 +91,6 @@ export default function ProductDisplayShell({
                         description={product.description || ''}
                         basePrice={product.basePrice}
                         featuredImage={imageUrl || undefined}
-                        sauces={product.sauces ?? undefined}
                         priority={priority}
                         currencySymbol={currencySymbol}
                       />
