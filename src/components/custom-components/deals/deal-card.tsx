@@ -6,6 +6,7 @@ import type { Deal, Media, Product } from '@/payload-types'
 import { useCartStore } from '@/store/cartStore'
 import { Button } from '@/components/ui/button'
 import { useSettings } from '@/providers/settings-provider'
+import { DEFAULTS } from '@/lib/defaults'
 
 function isProductObject(p: number | Product): p is Product {
   return typeof p === 'object' && p !== null && 'name' in p
@@ -19,7 +20,7 @@ interface DealCardProps {
 export default function DealCard({ deal, className }: DealCardProps) {
   const addToCart = useCartStore((state) => state.addToCart)
   const settings = useSettings()
-  const currencySymbol = settings?.currencySymbol ?? '$'
+  const currencySymbol = settings?.currencySymbol ?? DEFAULTS.currencySymbol
 
   const image = deal.featuredImage as Media | undefined
   const imageUrl = image?.thumbnailURL || image?.url || null

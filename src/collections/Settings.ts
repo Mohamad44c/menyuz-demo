@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { DEFAULTS } from '@/lib/defaults'
 
 const Settings: CollectionConfig = {
   slug: 'settings',
@@ -20,6 +21,7 @@ const Settings: CollectionConfig = {
           label: 'Restaurant / Cafe Name',
           type: 'text',
           required: true,
+          defaultValue: DEFAULTS.restaurantName,
           admin: {
             description: 'Displayed in the navbar, footer, and browser tab title.',
             width: '50%',
@@ -29,6 +31,7 @@ const Settings: CollectionConfig = {
           name: 'tagline',
           label: 'Tagline',
           type: 'text',
+          defaultValue: DEFAULTS.tagline,
           admin: {
             description: 'Short slogan shown in the footer (e.g. "Best burgers in town!").',
             width: '50%',
@@ -64,6 +67,7 @@ const Settings: CollectionConfig = {
               name: 'primaryColor',
               label: 'Primary Color — Light',
               type: 'text',
+              defaultValue: DEFAULTS.primaryColor,
               admin: {
                 description: 'Main accent color (buttons, headings, icons) in light mode.',
                 placeholder: 'e.g. #FFD700',
@@ -77,6 +81,7 @@ const Settings: CollectionConfig = {
               name: 'primaryForegroundColor',
               label: 'Primary Foreground — Light',
               type: 'text',
+              defaultValue: DEFAULTS.primaryForegroundColor,
               admin: {
                 description: 'Text / icon color rendered on top of the primary color in light mode.',
                 placeholder: 'e.g. #1a1a1a',
@@ -96,6 +101,7 @@ const Settings: CollectionConfig = {
               name: 'primaryColorDark',
               label: 'Primary Color — Dark',
               type: 'text',
+              defaultValue: DEFAULTS.primaryColorDark,
               admin: {
                 description: 'Primary color in dark mode. Leave empty to reuse the light value.',
                 placeholder: 'e.g. #FFD700',
@@ -109,6 +115,7 @@ const Settings: CollectionConfig = {
               name: 'primaryForegroundColorDark',
               label: 'Primary Foreground — Dark',
               type: 'text',
+              defaultValue: DEFAULTS.primaryForegroundColorDark,
               admin: {
                 description: 'Foreground color in dark mode. Leave empty to reuse the light value.',
                 placeholder: 'e.g. #1a1a1a',
@@ -135,7 +142,7 @@ const Settings: CollectionConfig = {
               name: 'currencySymbol',
               label: 'Currency Symbol',
               type: 'text',
-              defaultValue: '$',
+              defaultValue: DEFAULTS.currencySymbol,
               admin: {
                 description: 'Prepended to every price on the menu (e.g. £, $, €, LBP).',
                 width: '50%',
@@ -161,6 +168,7 @@ const Settings: CollectionConfig = {
       label: 'WhatsApp / Delivery Number',
       type: 'number',
       required: true,
+      defaultValue: DEFAULTS.deliveryNumber,
       min: 1,
       admin: {
         description: 'International format without the + (e.g. 96178830254).',
@@ -173,6 +181,7 @@ const Settings: CollectionConfig = {
           name: 'locationTitle',
           label: 'Location Title',
           type: 'text',
+          defaultValue: DEFAULTS.locationTitle,
           admin: {
             description: 'Display name for your store location (e.g. "Main Street Branch")',
             width: '50%',
@@ -182,6 +191,7 @@ const Settings: CollectionConfig = {
           name: 'locationUrl',
           label: 'Location (Google Maps)',
           type: 'text',
+          defaultValue: DEFAULTS.locationUrl,
           admin: {
             description: 'Google Maps URL for the store (e.g. https://goo.gl/maps/...)',
             width: '50%',
@@ -199,6 +209,7 @@ const Settings: CollectionConfig = {
           name: 'tiktokUrl',
           label: 'TikTok URL',
           type: 'text',
+          defaultValue: DEFAULTS.tiktokUrl,
           admin: {
             description: 'Your TikTok profile URL (e.g. https://tiktok.com/@username)',
           },
@@ -207,6 +218,7 @@ const Settings: CollectionConfig = {
           name: 'facebookUrl',
           label: 'Facebook URL',
           type: 'text',
+          defaultValue: DEFAULTS.facebookUrl,
           admin: {
             description: 'Your Facebook page URL (e.g. https://facebook.com/yourpage)',
           },
@@ -215,6 +227,7 @@ const Settings: CollectionConfig = {
           name: 'instagramUrl',
           label: 'Instagram URL',
           type: 'text',
+          defaultValue: DEFAULTS.instagramUrl,
           admin: {
             description: 'Your Instagram profile URL (e.g. https://instagram.com/username)',
           },

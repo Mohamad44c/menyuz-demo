@@ -1,5 +1,6 @@
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
+import { DEFAULTS } from '@/lib/defaults'
 import type { Product, Sauce } from '@/payload-types'
 import { ChevronRight, Plus } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -33,7 +34,7 @@ export default function ProductCardView({
   sauces = [],
   className,
   priority = false,
-  currencySymbol = '$',
+  currencySymbol = DEFAULTS.currencySymbol,
 }: ProductCardViewProps) {
   const sauceOptions = sauces?.filter(isSauceObject) ?? []
 

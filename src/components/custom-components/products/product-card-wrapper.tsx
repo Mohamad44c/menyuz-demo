@@ -2,6 +2,7 @@
 
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
+import { DEFAULTS } from '@/lib/defaults'
 import type { Product, Sauce } from '@/payload-types'
 import { useMemo, useState } from 'react'
 import {
@@ -48,7 +49,7 @@ export default function ProductCardWrapper({
   sauces = [],
   children,
   onClick,
-  currencySymbol = '$',
+  currencySymbol = DEFAULTS.currencySymbol,
 }: ProductCardWrapperProps) {
   const addToCart = useCartStore((state) => state.addToCart)
   const [quantity, setQuantity] = useState(1)

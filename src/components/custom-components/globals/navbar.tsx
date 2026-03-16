@@ -6,6 +6,7 @@ import NextImage from 'next/image'
 import ThemeToggle from '../theme-toggle'
 import { useSettings } from '@/providers/settings-provider'
 import type { Media } from '@/payload-types'
+import { DEFAULTS } from '@/lib/defaults'
 import WhatsAppContactIcon from '@/assets/whats-app-contact.svg'
 
 export default function Navbar() {
@@ -29,7 +30,8 @@ export default function Navbar() {
 
   const logo = settings?.logo as Media | null | undefined
   const logoUrl = logo?.url ?? null
-  const restaurantName = settings?.restaurantName ?? 'Restaurant Menu'
+  const restaurantName = settings?.restaurantName ?? DEFAULTS.restaurantName
+  const deliveryNumber = settings?.deliveryNumber ?? DEFAULTS.deliveryNumber
 
   return (
     <>
@@ -53,9 +55,9 @@ export default function Navbar() {
           </div>
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            {settings?.deliveryNumber != null && (
+            {deliveryNumber != null && (
               <Link
-                href={`https://wa.me/${settings.deliveryNumber}`}
+                href={`https://wa.me/${deliveryNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Contact us on WhatsApp"

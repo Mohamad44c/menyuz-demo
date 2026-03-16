@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { Poppins } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { DEFAULTS } from '@/lib/defaults'
 import { RootProvider } from '@/providers/root-provider'
 import { SettingsProvider } from '@/providers/settings-provider'
 import Navbar from '@/components/custom-components/globals/navbar'
@@ -27,8 +28,8 @@ async function getSettings() {
 export async function generateMetadata() {
   const settings = await getSettings()
   return {
-    title: settings?.restaurantName ?? 'Restaurant Menu',
-    description: settings?.tagline ?? 'Digital Menu',
+    title: settings?.restaurantName ?? DEFAULTS.restaurantName,
+    description: settings?.tagline ?? DEFAULTS.tagline,
   }
 }
 
@@ -36,31 +37,32 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
   const settings = await getSettings()
 
-  // Light values (or fall through to globals.css defaults if unset)
+  // Light values — fall through to globals.css defaults if unset
   const lightPrimary = settings?.primaryColor ?? ''
   const lightFg = settings?.primaryForegroundColor ?? ''
   // Dark values fall back to the light value when not explicitly set
   const darkPrimary = settings?.primaryColorDark ?? lightPrimary
   const darkFg = settings?.primaryForegroundColorDark ?? lightFg
 
+  // Build a single CSS string — only render the <style> block when something is set
+  const cssVars = [
+    ':root {',
+    lightPrimary ? `--primary:${lightPrimary};` : '',
+    lightFg ? `--primary-foreground:${lightFg};` : '',
+    '}',
+    '.dark {',
+    darkPrimary ? `--primary:${darkPrimary};` : '',
+    darkFg ? `--primary-foreground:${darkFg};` : '',
+    '}',
+  ].join('')
+
   const hasColorOverride = lightPrimary || lightFg || darkPrimary || darkFg
 
   return (
+    // suppressHydrationWarning is required because next-themes toggles the class on <html>
     <html lang="en" className={cn(poppins.variable, 'font-poppins antialiased')} suppressHydrationWarning>
-      <head>
-        {hasColorOverride && (
-          <style>{`
-            :root {
-              ${lightPrimary ? `--primary: ${lightPrimary};` : ''}
-              ${lightFg ? `--primary-foreground: ${lightFg};` : ''}
-            }
-            .dark {
-              ${darkPrimary ? `--primary: ${darkPrimary};` : ''}
-              ${darkFg ? `--primary-foreground: ${darkFg};` : ''}
-            }
-          `}</style>
-        )}
-      </head>
+      {/* No whitespace inside <head> — text nodes are invalid there and cause hydration errors */}
+      <head>{hasColorOverride ? <style dangerouslySetInnerHTML={{ __html: cssVars }} /> : null}</head>
       <body>
         <RootProvider>
           <SettingsProvider settings={settings}>

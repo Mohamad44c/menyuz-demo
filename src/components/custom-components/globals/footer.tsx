@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Phone, MapPin, UtensilsCrossed, Instagram, Facebook } from 'lucide-react'
 import { useSettings } from '@/providers/settings-provider'
+import { DEFAULTS } from '@/lib/defaults'
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -22,6 +23,17 @@ export default function Footer() {
   const settings = useSettings()
   const currentYear = new Date().getFullYear()
 
+  // Resolve each value against DEFAULTS so the footer always renders
+  // even when no settings document exists in the database yet
+  const restaurantName = settings?.restaurantName ?? DEFAULTS.restaurantName
+  const tagline = settings?.tagline ?? DEFAULTS.tagline
+  const deliveryNumber = settings?.deliveryNumber ?? DEFAULTS.deliveryNumber
+  const locationTitle = settings?.locationTitle ?? DEFAULTS.locationTitle
+  const locationUrl = settings?.locationUrl ?? DEFAULTS.locationUrl
+  const tiktokUrl = settings?.tiktokUrl ?? DEFAULTS.tiktokUrl
+  const facebookUrl = settings?.facebookUrl ?? DEFAULTS.facebookUrl
+  const instagramUrl = settings?.instagramUrl ?? DEFAULTS.instagramUrl
+
   return (
     <footer className="bg-muted border-t border-border">
       <div className="container mx-auto py-10 px-4 xl:px-0">
@@ -32,12 +44,12 @@ export default function Footer() {
               href="/"
               className="mb-2 text-xl font-bold text-foreground transition-colors hover:text-primary"
             >
-              {settings?.restaurantName ?? 'Restaurant Menu'}
+              {restaurantName}
             </Link>
-            {settings?.tagline && (
+            {tagline && (
               <div className="mt-2 flex items-center">
                 <UtensilsCrossed className="size-5 text-primary shrink-0" />
-                <span className="ms-3 text-muted-foreground">{settings.tagline}</span>
+                <span className="ms-3 text-muted-foreground">{tagline}</span>
               </div>
             )}
           </div>
@@ -46,33 +58,33 @@ export default function Footer() {
           <div>
             <h3 className="mb-4 text-lg font-semibold text-foreground">Contact Us</h3>
             <ul className="space-y-3">
-              {settings?.deliveryNumber != null && (
+              {deliveryNumber != null && (
                 <li>
                   <Link
-                    href={`https://wa.me/${settings.deliveryNumber}`}
+                    href={`https://wa.me/${deliveryNumber}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center text-muted-foreground transition-colors hover:text-foreground"
                   >
                     <Phone className="h-5 w-5 me-2 shrink-0 text-primary" />
-                    <span>+{settings.deliveryNumber}</span>
+                    <span>+{deliveryNumber}</span>
                   </Link>
                 </li>
               )}
-              {settings?.locationTitle && (
+              {locationTitle && (
                 <li className="flex items-center">
                   <MapPin className="h-5 w-5 me-2 shrink-0 text-primary" />
-                  {settings.locationUrl ? (
+                  {locationUrl ? (
                     <Link
-                      href={settings.locationUrl}
+                      href={locationUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground transition-colors hover:text-foreground hover:underline"
                     >
-                      {settings.locationTitle}
+                      {locationTitle}
                     </Link>
                   ) : (
-                    <span className="text-muted-foreground">{settings.locationTitle}</span>
+                    <span className="text-muted-foreground">{locationTitle}</span>
                   )}
                 </li>
               )}
@@ -83,10 +95,10 @@ export default function Footer() {
           <div className="flex flex-col items-center">
             <h3 className="mb-4 text-lg font-semibold text-foreground">Follow Us</h3>
             <ul className="flex flex-row items-center justify-center gap-4">
-              {settings?.tiktokUrl && (
+              {tiktokUrl && (
                 <li>
                   <Link
-                    href={settings.tiktokUrl}
+                    href={tiktokUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
@@ -96,10 +108,10 @@ export default function Footer() {
                   </Link>
                 </li>
               )}
-              {settings?.facebookUrl && (
+              {facebookUrl && (
                 <li>
                   <Link
-                    href={settings.facebookUrl}
+                    href={facebookUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
@@ -109,10 +121,10 @@ export default function Footer() {
                   </Link>
                 </li>
               )}
-              {settings?.instagramUrl && (
+              {instagramUrl && (
                 <li>
                   <Link
-                    href={settings.instagramUrl}
+                    href={instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
@@ -129,9 +141,7 @@ export default function Footer() {
         <div className="mt-8 flex flex-col items-center justify-between border-t border-border pt-8 md:flex-row">
           <p className="text-sm text-muted-foreground">
             &copy; {currentYear}{' '}
-            <span className="font-semibold text-foreground">
-              {settings?.restaurantName ?? 'Restaurant Menu'}
-            </span>
+            <span className="font-semibold text-foreground">{restaurantName}</span>
             . All rights reserved.
           </p>
           <div className="mt-4 md:mt-0">
