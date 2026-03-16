@@ -71,7 +71,6 @@ export interface Config {
     categories: Category;
     products: Product;
     deals: Deal;
-    sauces: Sauce;
     media: Media;
     settings: Setting;
     'payload-kv': PayloadKv;
@@ -85,7 +84,6 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     products: ProductsSelect<false> | ProductsSelect<true>;
     deals: DealsSelect<false> | DealsSelect<true>;
-    sauces: SaucesSelect<false> | SaucesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     settings: SettingsSelect<false> | SettingsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -100,6 +98,9 @@ export interface Config {
   globals: {};
   globalsSelect: {};
   locale: null;
+  widgets: {
+    collections: CollectionsWidget;
+  };
   user: User;
   jobs: {
     tasks: unknown;
@@ -174,10 +175,6 @@ export interface Product {
   featuredImage?: (number | null) | Media;
   isAvailable?: boolean | null;
   isFeatured?: boolean | null;
-  /**
-   * Select one or multiple sauces available for this product
-   */
-  sauces?: (number | Sauce)[] | null;
   sizeOptions?:
     | {
         sizeName: string;
@@ -204,6 +201,7 @@ export interface Product {
 export interface Media {
   id: number;
   alt: string;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -215,16 +213,6 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sauces".
- */
-export interface Sauce {
-  id: number;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -271,13 +259,52 @@ export interface Deal {
  */
 export interface Setting {
   id: number;
+  /**
+   * Displayed in the navbar, footer, and browser tab title.
+   */
+  restaurantName: string;
+  /**
+   * Short slogan shown in the footer (e.g. "Best burgers in town!").
+   */
+  tagline?: string | null;
+  /**
+   * Navbar logo. If left empty the restaurant name text is shown instead. Recommended: transparent PNG, ~200x60 px.
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Main accent color (buttons, headings, icons) in light mode.
+   */
+  primaryColor?: string | null;
+  /**
+   * Text / icon color rendered on top of the primary color in light mode.
+   */
+  primaryForegroundColor?: string | null;
+  /**
+   * Primary color in dark mode. Leave empty to reuse the light value.
+   */
+  primaryColorDark?: string | null;
+  /**
+   * Foreground color in dark mode. Leave empty to reuse the light value.
+   */
+  primaryForegroundColorDark?: string | null;
+  /**
+   * Prepended to every price on the menu (e.g. £, $, €, LBP).
+   */
+  currencySymbol?: string | null;
+  /**
+   * Toggle to hide the deals/offers section from the menu.
+   */
+  showDealsSection?: boolean | null;
+  /**
+   * International format without the + (e.g. 96178830254).
+   */
   deliveryNumber: number;
   /**
    * Display name for your store location (e.g. "Main Street Branch")
    */
   locationTitle?: string | null;
   /**
-   * Paste a Google Maps URL to display your store location for customers (e.g. https://maps.google.com/... or https://goo.gl/maps/...)
+   * Google Maps URL for the store (e.g. https://goo.gl/maps/...)
    */
   locationUrl?: string | null;
   /**
@@ -334,10 +361,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'deals';
         value: number | Deal;
-      } | null)
-    | ({
-        relationTo: 'sauces';
-        value: number | Sauce;
       } | null)
     | ({
         relationTo: 'media';
@@ -434,7 +457,6 @@ export interface ProductsSelect<T extends boolean = true> {
   featuredImage?: T;
   isAvailable?: T;
   isFeatured?: T;
-  sauces?: T;
   sizeOptions?:
     | T
     | {
@@ -474,19 +496,11 @@ export interface DealsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sauces_select".
- */
-export interface SaucesSelect<T extends boolean = true> {
-  name?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -504,6 +518,15 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "settings_select".
  */
 export interface SettingsSelect<T extends boolean = true> {
+  restaurantName?: T;
+  tagline?: T;
+  logo?: T;
+  primaryColor?: T;
+  primaryForegroundColor?: T;
+  primaryColorDark?: T;
+  primaryForegroundColorDark?: T;
+  currencySymbol?: T;
+  showDealsSection?: T;
   deliveryNumber?: T;
   locationTitle?: T;
   locationUrl?: T;
@@ -552,6 +575,16 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "collections_widget".
+ */
+export interface CollectionsWidget {
+  data?: {
+    [k: string]: unknown;
+  };
+  width: 'full';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -2,8 +2,8 @@
 
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
-import { Product, Sauce } from '@/payload-types'
-import { useMemo, useState } from 'react'
+import { Product } from '@/payload-types'
+import { useState } from 'react'
 import {
   Drawer,
   DrawerContent,
@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/drawer'
 import { useCartStore } from '@/store/cartStore'
 import ProductQuantityCounter from './product-quantity-counter'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ChevronRight, Plus } from 'lucide-react'
 
@@ -24,14 +23,9 @@ interface ProductCardProps {
   basePrice: number
   featuredImage?: string | StaticImageData | null
   sizeOptions?: Product['sizeOptions']
-  sauces?: Product['sauces']
   className?: string
   onClick?: (id: number) => void
   priority?: boolean
-}
-
-function isSauceObject(s: number | Sauce): s is Sauce {
-  return typeof s === 'object' && s !== null && 'name' in s
 }
 
 export default function ProductCard({
@@ -41,7 +35,6 @@ export default function ProductCard({
   basePrice,
   featuredImage = null,
   sizeOptions = [],
-  sauces = [],
   className,
   onClick,
   priority = false,
@@ -49,10 +42,7 @@ export default function ProductCard({
   const addToCart = useCartStore((state) => state.addToCart)
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  const [selectedSauce, setSelectedSauce] = useState<Sauce | null>(null)
   const [isOpen, setIsOpen] = useState(false)
-
-  const sauceOptions = useMemo(() => sauces?.filter(isSauceObject) ?? [], [sauces])
 
   const formatPrice = (price: number) => {
     const fixed = price.toFixed(2)
@@ -80,12 +70,6 @@ export default function ProductCard({
           sizeName: selectedSizeOption.sizeName,
           priceModifier: selectedSizeOption.priceModifier || 0,
           description: selectedSizeOption.description || undefined,
-        },
-      }),
-      ...(selectedSauce && {
-        sauce: {
-          id: selectedSauce.id,
-          name: selectedSauce.name,
         },
       }),
     }
@@ -136,19 +120,6 @@ export default function ProductCard({
                 </div>
               </div>
               <p className="font-light text-sm text-gray-400 line-clamp-3">{description}</p>
-              {sauceOptions.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-1">
-                  {sauceOptions.map((sauce) => (
-                    <Badge
-                      key={sauce.id}
-                      variant="secondary"
-                      className="text-[0.65rem] font-normal py-0 px-1.5"
-                    >
-                      {sauce.name}
-                    </Badge>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -209,29 +180,6 @@ export default function ProductCard({
             </div>
           )}
 
-          {sauceOptions.length > 0 && (
-            <div className="flex items-center gap-4">
-              <h3 className="font-medium">Select Sauce</h3>
-              <div className="flex flex-wrap gap-2">
-                {sauceOptions.map((option) => (
-                  <Button
-                    variant="outline"
-                    key={option.id}
-                    className={`border rounded-lg h-8 text-sm transition-colors ${
-                      selectedSauce?.id === option.id
-                        ? 'bg-black text-white border-black'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    onClick={() =>
-                      setSelectedSauce(selectedSauce?.id === option.id ? null : option)
-                    }
-                  >
-                    {option.name}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
           <ProductQuantityCounter
             value={quantity}
             onIncrement={() => setQuantity(quantity + 1)}

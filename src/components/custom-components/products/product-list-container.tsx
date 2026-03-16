@@ -56,7 +56,6 @@ export default function ProductListContainer({
             basePrice={product.basePrice}
             featuredImage={imageUrl || undefined}
             sizeOptions={product.sizeOptions ?? undefined}
-            sauces={product.sauces ?? undefined}
             onClick={onProductClick}
             priority={index + priorityOffset < 6}
           />

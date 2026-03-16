@@ -1,12 +1,7 @@
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
-import type { Product, Sauce } from '@/payload-types'
+import { DEFAULTS } from '@/lib/defaults'
 import { ChevronRight, Plus } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-
-function isSauceObject(s: number | Sauce): s is Sauce {
-  return typeof s === 'object' && s !== null && 'name' in s
-}
 
 interface ProductCardViewProps {
   id: number
@@ -14,9 +9,9 @@ interface ProductCardViewProps {
   description: string
   basePrice: number
   featuredImage?: string | StaticImageData | null
-  sauces?: Product['sauces']
   className?: string
   priority?: boolean
+  currencySymbol?: string
 }
 
 function formatPrice(price: number) {
@@ -29,12 +24,10 @@ export default function ProductCardView({
   description,
   basePrice,
   featuredImage = null,
-  sauces = [],
   className,
   priority = false,
+  currencySymbol = DEFAULTS.currencySymbol,
 }: ProductCardViewProps) {
-  const sauceOptions = sauces?.filter(isSauceObject) ?? []
-
   return (
     <div
       className={cn(
@@ -67,25 +60,12 @@ export default function ProductCardView({
             <h3 className="text-base font-semibold">{name}</h3>
             <div className="flex items-center gap-1.5">
               <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
-                ${formatPrice(basePrice)}
+                {currencySymbol}{formatPrice(basePrice)}
               </p>
               <ChevronRight className="w-4 h-4 text-foreground/90" />
             </div>
           </div>
           <p className="font-light text-sm text-gray-400 line-clamp-3">{description}</p>
-          {sauceOptions.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-1">
-              {sauceOptions.map((sauce) => (
-                <Badge
-                  key={sauce.id}
-                  variant="secondary"
-                  className="text-[0.65rem] font-normal py-0 px-1.5"
-                >
-                  {sauce.name}
-                </Badge>
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -2,8 +2,9 @@
 
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
-import type { Product, Sauce } from '@/payload-types'
-import { useMemo, useState } from 'react'
+import { DEFAULTS } from '@/lib/defaults'
+import type { Product } from '@/payload-types'
+import { useState } from 'react'
 import {
   Drawer,
   DrawerContent,
@@ -16,10 +17,6 @@ import ProductQuantityCounter from './product-quantity-counter'
 import { Button } from '@/components/ui/button'
 import type { ReactNode } from 'react'
 
-function isSauceObject(s: number | Sauce): s is Sauce {
-  return typeof s === 'object' && s !== null && 'name' in s
-}
-
 interface ProductCardWrapperProps {
   id: number
   name: string
@@ -27,9 +24,9 @@ interface ProductCardWrapperProps {
   basePrice: number
   featuredImage?: string | StaticImageData | null
   sizeOptions?: Product['sizeOptions']
-  sauces?: Product['sauces']
   children: ReactNode
   onClick?: (id: number) => void
+  currencySymbol?: string
 }
 
 function formatPrice(price: number) {
@@ -44,17 +41,14 @@ export default function ProductCardWrapper({
   basePrice,
   featuredImage = null,
   sizeOptions = [],
-  sauces = [],
   children,
   onClick,
+  currencySymbol = DEFAULTS.currencySymbol,
 }: ProductCardWrapperProps) {
   const addToCart = useCartStore((state) => state.addToCart)
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
-  const [selectedSauce, setSelectedSauce] = useState<Sauce | null>(null)
   const [isOpen, setIsOpen] = useState(false)
-
-  const sauceOptions = useMemo(() => sauces?.filter(isSauceObject) ?? [], [sauces])
 
   const handleAddToCart = () => {
     const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
@@ -75,12 +69,6 @@ export default function ProductCardWrapper({
           sizeName: selectedSizeOption.sizeName,
           priceModifier: selectedSizeOption.priceModifier || 0,
           description: selectedSizeOption.description || undefined,
-        },
-      }),
-      ...(selectedSauce && {
-        sauce: {
-          id: selectedSauce.id,
-          name: selectedSauce.name,
         },
       }),
     }
@@ -115,7 +103,7 @@ export default function ProductCardWrapper({
               <div className="flex items-start justify-between gap-2">
                 <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
                 <p className="text-lg font-bold shrink-0 rounded-full bg-light-grey py-1 px-2.5">
-                  ${formatPrice(
+                  {currencySymbol}{formatPrice(
                     basePrice +
                       (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier ||
                         0),
@@ -146,7 +134,7 @@ export default function ProductCardWrapper({
                   >
                     {option.sizeName}
                     {option.priceModifier && option.priceModifier > 0 && (
-                      <span className="ml-1">(+${formatPrice(option.priceModifier)})</span>
+                      <span className="ml-1">(+{currencySymbol}{formatPrice(option.priceModifier)})</span>
                     )}
                   </Button>
                 ))}
@@ -154,30 +142,6 @@ export default function ProductCardWrapper({
             </div>
           )}
 
-          {sauceOptions.length > 0 && (
-            <div className="flex items-center gap-4">
-              <h3 className="font-medium">Select Sauce</h3>
-              <div className="flex flex-wrap gap-2">
-                {sauceOptions.map((option) => (
-                  <Button
-                    variant="outline"
-                    key={option.id}
-                    className={cn(
-                      'border rounded-lg h-8 text-sm transition-colors',
-                      selectedSauce?.id === option.id
-                        ? 'bg-black text-white border-black'
-                        : 'border-gray-300 hover:border-gray-400',
-                    )}
-                    onClick={() =>
-                      setSelectedSauce(selectedSauce?.id === option.id ? null : option)
-                    }
-                  >
-                    {option.name}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          )}
           <ProductQuantityCounter
             value={quantity}
             onIncrement={() => setQuantity(quantity + 1)}
@@ -189,8 +153,7 @@ export default function ProductCardWrapper({
           <div className="mt-auto pt-4 flex justify-between items-center border-t">
             <div>
               <span className="text-lg font-bold">
-                $
-                {formatPrice(
+                {currencySymbol}{formatPrice(
                   basePrice +
                     (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0),
                 )}
