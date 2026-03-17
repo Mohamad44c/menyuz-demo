@@ -138,12 +138,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between border-t border-border pt-8 md:flex-row">
-          <p className="text-sm text-muted-foreground">
-            &copy; {currentYear}{' '}
-            <span className="font-semibold text-foreground">{restaurantName}</span>
-            . All rights reserved.
-          </p>
+        <div className="mt-8 flex flex-col items-center justify-between gap-2 border-t border-border pt-8 md:flex-row">
+          <div className="text-center md:text-left">
+            <p className="text-sm text-muted-foreground">
+              &copy; {currentYear}{' '}
+              <span className="font-semibold text-foreground">{restaurantName}</span>
+              . All rights reserved.
+            </p>
+            <p className="text-xs text-muted-foreground/80">This menu is for demo purposes only.</p>
+          </div>
           <div className="mt-4 md:mt-0">
             <Link
               href="https://www.nexus-techlb.com/"
