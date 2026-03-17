@@ -2,7 +2,7 @@
 
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
-import { Product } from '@/payload-types'
+import { Media, Product } from '@/payload-types'
 import { useState } from 'react'
 import {
   Drawer,
@@ -21,7 +21,7 @@ interface ProductCardProps {
   name: string
   description: string
   basePrice: number
-  featuredImage?: string | StaticImageData | null
+  featuredImage?: string | StaticImageData | Media | null
   sizeOptions?: Product['sizeOptions']
   className?: string
   onClick?: (id: number) => void
@@ -43,6 +43,17 @@ export default function ProductCard({
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+
+  const resolveFeaturedImage = (
+    image: ProductCardProps['featuredImage'],
+  ): string | StaticImageData | null => {
+    if (!image) return null
+    if (typeof image === 'string') return image
+    if ('src' in image) return image
+    return image.thumbnailURL ?? image.url ?? null
+  }
+
+  const resolvedFeaturedImage = resolveFeaturedImage(featuredImage)
 
   const formatPrice = (price: number) => {
     const fixed = price.toFixed(2)
@@ -89,10 +100,10 @@ export default function ProductCard({
           )}
           onClick={() => onClick?.(id)}
         >
-          {featuredImage && (
+          {resolvedFeaturedImage && (
             <div className="w-[70px] h-[70px] relative overflow-hidden rounded-2xl shrink-0">
               <Image
-                src={featuredImage}
+                src={resolvedFeaturedImage}
                 alt={name}
                 className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-125"
                 width={70}
@@ -100,12 +111,6 @@ export default function ProductCard({
                 priority={priority}
                 quality={80}
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 rounded-2xl flex items-center justify-center">
-                <Plus
-                  className="w-5 h-5 text-background drop-shadow-md"
-                  strokeWidth={2.5}
-                />
-              </div>
             </div>
           )}
           <div className="flex flex-col gap-3 flex-1 justify-between min-w-0">
@@ -127,10 +132,10 @@ export default function ProductCard({
       <DrawerContent className="max-h-[90vh]">
         <div className="p-4 h-full flex flex-col overflow-y-auto gap-4">
           <div className="flex gap-4">
-            {featuredImage && (
+            {resolvedFeaturedImage && (
               <div className="w-24 h-24 relative overflow-hidden rounded-2xl shrink-0">
                 <Image
-                  src={featuredImage}
+                  src={resolvedFeaturedImage}
                   alt={name}
                   className="w-full h-full rounded-lg object-cover transition-transform duration-300 ease-in-out group-hover:scale-125"
                   width={96}
@@ -144,14 +149,17 @@ export default function ProductCard({
               <div className="flex items-start justify-between gap-2">
                 <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
                 <p className="text-lg font-bold shrink-0 rounded-full bg-light-grey py-1 px-2.5">
-                  ${formatPrice(
+                  $
+                  {formatPrice(
                     basePrice +
                       (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier ||
                         0),
                   )}
                 </p>
               </div>
-              <DrawerDescription className="text-sm text-gray-400 mt-2">{description}</DrawerDescription>
+              <DrawerDescription className="text-sm text-gray-400 mt-2">
+                {description}
+              </DrawerDescription>
             </div>
           </div>
 

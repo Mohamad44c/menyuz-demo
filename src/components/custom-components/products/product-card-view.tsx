@@ -2,13 +2,14 @@ import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
 import { DEFAULTS } from '@/lib/defaults'
 import { ChevronRight, Plus } from 'lucide-react'
+import type { Media } from '@/payload-types'
 
 interface ProductCardViewProps {
   id: number
   name: string
   description: string
   basePrice: number
-  featuredImage?: string | StaticImageData | null
+  featuredImage?: string | StaticImageData | Media | null
   className?: string
   priority?: boolean
   currencySymbol?: string
@@ -28,6 +29,17 @@ export default function ProductCardView({
   priority = false,
   currencySymbol = DEFAULTS.currencySymbol,
 }: ProductCardViewProps) {
+  const resolveFeaturedImage = (
+    image: ProductCardViewProps['featuredImage'],
+  ): string | StaticImageData | null => {
+    if (!image) return null
+    if (typeof image === 'string') return image
+    if ('src' in image) return image
+    return image.thumbnailURL ?? image.url ?? null
+  }
+
+  const resolvedFeaturedImage = resolveFeaturedImage(featuredImage)
+
   return (
     <div
       className={cn(
@@ -35,10 +47,10 @@ export default function ProductCardView({
         className,
       )}
     >
-      {featuredImage && (
+      {resolvedFeaturedImage && (
         <div className="w-[70px] h-[70px] relative overflow-hidden rounded-2xl shrink-0">
           <Image
-            src={featuredImage}
+            src={resolvedFeaturedImage}
             alt={name}
             className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-125"
             width={70}
@@ -46,12 +58,6 @@ export default function ProductCardView({
             priority={priority}
             quality={80}
           />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 rounded-2xl flex items-center justify-center">
-            <Plus
-              className="w-5 h-5 text-background drop-shadow-md"
-              strokeWidth={2.5}
-            />
-          </div>
         </div>
       )}
       <div className="flex flex-col gap-3 flex-1 justify-between min-w-0">
@@ -60,7 +66,8 @@ export default function ProductCardView({
             <h3 className="text-base font-semibold">{name}</h3>
             <div className="flex items-center gap-1.5">
               <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
-                {currencySymbol}{formatPrice(basePrice)}
+                {currencySymbol}
+                {formatPrice(basePrice)}
               </p>
               <ChevronRight className="w-4 h-4 text-foreground/90" />
             </div>

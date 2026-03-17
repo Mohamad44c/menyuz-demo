@@ -3,7 +3,7 @@
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
 import { DEFAULTS } from '@/lib/defaults'
-import type { Product } from '@/payload-types'
+import type { Media, Product } from '@/payload-types'
 import { useState } from 'react'
 import {
   Drawer,
@@ -22,7 +22,7 @@ interface ProductCardWrapperProps {
   name: string
   description: string
   basePrice: number
-  featuredImage?: string | StaticImageData | null
+  featuredImage?: string | StaticImageData | Media | null
   sizeOptions?: Product['sizeOptions']
   children: ReactNode
   onClick?: (id: number) => void
@@ -49,6 +49,17 @@ export default function ProductCardWrapper({
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
+
+  const resolveFeaturedImage = (
+    image: ProductCardWrapperProps['featuredImage'],
+  ): string | StaticImageData | null => {
+    if (!image) return null
+    if (typeof image === 'string') return image
+    if ('src' in image) return image
+    return image.thumbnailURL ?? image.url ?? null
+  }
+
+  const resolvedFeaturedImage = resolveFeaturedImage(featuredImage)
 
   const handleAddToCart = () => {
     const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
@@ -86,10 +97,10 @@ export default function ProductCardWrapper({
       <DrawerContent className="max-h-[90vh]">
         <div className="p-4 h-full flex flex-col overflow-y-auto gap-4">
           <div className="flex gap-4">
-            {featuredImage && (
+            {resolvedFeaturedImage && (
               <div className="w-24 h-24 relative overflow-hidden rounded-2xl shrink-0">
                 <Image
-                  src={featuredImage}
+                  src={resolvedFeaturedImage}
                   alt={name}
                   className="w-full h-full rounded-lg object-cover transition-transform duration-300 ease-in-out group-hover:scale-125"
                   width={96}
