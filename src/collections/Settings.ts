@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { DEFAULTS } from '@/lib/defaults'
+import { revalidateFrontendAfterChange } from '@/hooks/revalidate-frontend'
 
 const Settings: CollectionConfig = {
   slug: 'settings',
@@ -238,6 +239,9 @@ const Settings: CollectionConfig = {
   versions: false,
   timestamps: true,
   endpoints: [],
+  hooks: {
+    afterChange: [revalidateFrontendAfterChange],
+  },
 }
 
 export default Settings

@@ -3,6 +3,7 @@ import ProductCardView from './product-card-view'
 import ProductCardWrapper from './product-card-wrapper'
 import DealsSection from '../deals/deals-section'
 import type { Media } from '@/payload-types'
+import { getVersionedMediaUrl } from '@/lib/media'
 
 const DEALS_CATEGORY_ID = -1
 
@@ -72,7 +73,7 @@ export default function ProductDisplayShell({
               <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 container mt-7 mb-10 mx-auto">
                 {group.products.map((product, index) => {
                   const image = product.featuredImage as Media | undefined
-                  const imageUrl = image?.url || image?.thumbnailURL || null
+                  const imageUrl = getVersionedMediaUrl(image)
                   const priority = index + offset < 6
                   return (
                     <ProductCardWrapper

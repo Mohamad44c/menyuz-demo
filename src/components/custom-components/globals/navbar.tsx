@@ -8,6 +8,7 @@ import { useSettings } from '@/providers/settings-provider'
 import type { Media } from '@/payload-types'
 import { DEFAULTS } from '@/lib/defaults'
 import WhatsAppContactIcon from '@/assets/whats-app-contact.svg'
+import { getVersionedMediaUrl } from '@/lib/media'
 
 export default function Navbar() {
   const settings = useSettings()
@@ -29,7 +30,7 @@ export default function Navbar() {
   }, [handleScroll])
 
   const logo = settings?.logo as Media | null | undefined
-  const logoUrl = logo?.url ?? null
+  const logoUrl = getVersionedMediaUrl(logo)
   const restaurantName = settings?.restaurantName ?? DEFAULTS.restaurantName
   const deliveryNumber = settings?.deliveryNumber ?? DEFAULTS.deliveryNumber
 

@@ -7,6 +7,7 @@ import { useCartStore } from '@/store/cartStore'
 import { Button } from '@/components/ui/button'
 import { useSettings } from '@/providers/settings-provider'
 import { DEFAULTS } from '@/lib/defaults'
+import { getVersionedMediaUrl } from '@/lib/media'
 
 function isProductObject(p: number | Product): p is Product {
   return typeof p === 'object' && p !== null && 'name' in p
@@ -23,7 +24,7 @@ export default function DealCard({ deal, className }: DealCardProps) {
   const currencySymbol = settings?.currencySymbol ?? DEFAULTS.currencySymbol
 
   const image = deal.featuredImage as Media | undefined
-  const imageUrl = image?.thumbnailURL || image?.url || null
+  const imageUrl = getVersionedMediaUrl(image, { preferThumbnail: true })
 
   const productNames = (deal.products ?? [])
     .filter(isProductObject)

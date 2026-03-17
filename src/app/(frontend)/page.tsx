@@ -10,6 +10,8 @@ import ProductDisplayClient from '@/components/custom-components/products/produc
 import ProductDisplayShell from '@/components/custom-components/products/product-display-shell'
 import { DEFAULTS } from '@/lib/defaults'
 
+export const revalidate = 60
+
 const payload = await getPayload({ config })
 
 export default async function HomePage() {

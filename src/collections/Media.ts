@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  revalidateFrontendAfterChange,
+  revalidateFrontendAfterDelete,
+} from '@/hooks/revalidate-frontend'
 
 export const Media: CollectionConfig = {
   admin: {
@@ -16,4 +20,8 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: true,
+  hooks: {
+    afterChange: [revalidateFrontendAfterChange],
+    afterDelete: [revalidateFrontendAfterDelete],
+  },
 }

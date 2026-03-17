@@ -1,4 +1,8 @@
 import type { CollectionConfig } from 'payload'
+import {
+  revalidateFrontendAfterChange,
+  revalidateFrontendAfterDelete,
+} from '@/hooks/revalidate-frontend'
 
 export const Deals: CollectionConfig = {
   slug: 'deals',
@@ -145,5 +149,7 @@ export const Deals: CollectionConfig = {
         return data
       },
     ],
+    afterChange: [revalidateFrontendAfterChange],
+    afterDelete: [revalidateFrontendAfterDelete],
   },
 }
