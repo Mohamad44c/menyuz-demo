@@ -46,7 +46,7 @@ export default function ProductListContainer({
     <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 container mt-7 mb-10 mx-auto">
       {products.map((product, index) => {
         const image = product.featuredImage as Media | undefined
-        const imageUrl = image?.thumbnailURL || image?.url || null
+        const imageUrl = image?.url || image?.thumbnailURL || null
         return (
           <ProductCard
             key={product.id}

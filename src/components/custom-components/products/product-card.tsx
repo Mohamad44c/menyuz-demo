@@ -50,7 +50,7 @@ export default function ProductCard({
     if (!image) return null
     if (typeof image === 'string') return image
     if ('src' in image) return image
-    return image.thumbnailURL ?? image.url ?? null
+    return image.url ?? image.thumbnailURL ?? null
   }
 
   const resolvedFeaturedImage = resolveFeaturedImage(featuredImage)
