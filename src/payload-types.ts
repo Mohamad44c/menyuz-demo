@@ -300,6 +300,62 @@ export interface Setting {
    */
   showDealsSection?: boolean | null;
   /**
+   * Optional. Configure when your business is open. Leave "Schedule" empty to hide opening hours from the menu entirely.
+   */
+  openingHours?: {
+    /**
+     * Pick a quick preset or "Custom" to configure each day individually.
+     */
+    preset?: ('everyday' | 'weekdays' | 'weekends' | 'custom') | null;
+    /**
+     * 24-hour format, e.g. 08:30
+     */
+    openTime?: string | null;
+    /**
+     * 24-hour format, e.g. 23:00
+     */
+    closeTime?: string | null;
+    monday?: {
+      isOpen?: boolean | null;
+      openTime?: string | null;
+      closeTime?: string | null;
+    };
+    tuesday?: {
+      isOpen?: boolean | null;
+      openTime?: string | null;
+      closeTime?: string | null;
+    };
+    wednesday?: {
+      isOpen?: boolean | null;
+      openTime?: string | null;
+      closeTime?: string | null;
+    };
+    thursday?: {
+      isOpen?: boolean | null;
+      openTime?: string | null;
+      closeTime?: string | null;
+    };
+    friday?: {
+      isOpen?: boolean | null;
+      openTime?: string | null;
+      closeTime?: string | null;
+    };
+    saturday?: {
+      isOpen?: boolean | null;
+      openTime?: string | null;
+      closeTime?: string | null;
+    };
+    sunday?: {
+      isOpen?: boolean | null;
+      openTime?: string | null;
+      closeTime?: string | null;
+    };
+    /**
+     * Short note displayed alongside hours (max 80 characters).
+     */
+    note?: string | null;
+  };
+  /**
    * International format without the + (e.g. 96178830254).
    */
   deliveryNumber: number;
@@ -532,6 +588,63 @@ export interface SettingsSelect<T extends boolean = true> {
   primaryForegroundColorDark?: T;
   currencySymbol?: T;
   showDealsSection?: T;
+  openingHours?:
+    | T
+    | {
+        preset?: T;
+        openTime?: T;
+        closeTime?: T;
+        monday?:
+          | T
+          | {
+              isOpen?: T;
+              openTime?: T;
+              closeTime?: T;
+            };
+        tuesday?:
+          | T
+          | {
+              isOpen?: T;
+              openTime?: T;
+              closeTime?: T;
+            };
+        wednesday?:
+          | T
+          | {
+              isOpen?: T;
+              openTime?: T;
+              closeTime?: T;
+            };
+        thursday?:
+          | T
+          | {
+              isOpen?: T;
+              openTime?: T;
+              closeTime?: T;
+            };
+        friday?:
+          | T
+          | {
+              isOpen?: T;
+              openTime?: T;
+              closeTime?: T;
+            };
+        saturday?:
+          | T
+          | {
+              isOpen?: T;
+              openTime?: T;
+              closeTime?: T;
+            };
+        sunday?:
+          | T
+          | {
+              isOpen?: T;
+              openTime?: T;
+              closeTime?: T;
+            };
+        note?: T;
+      };
   deliveryNumber?: T;
   locationTitle?: T;
   locationUrl?: T;

@@ -182,6 +182,356 @@ const Settings: CollectionConfig = {
         },
       ],
     },
+    // ─── Opening Hours ───────────────────────────────────────────────────────
+    {
+      name: 'openingHours',
+      label: 'Opening Hours',
+      type: 'group',
+      admin: {
+        description:
+          'Optional. Configure when your business is open. Leave "Schedule" empty to hide opening hours from the menu entirely.',
+      },
+      fields: [
+        // ── Preset picker ──────────────────────────────────────────────────
+        {
+          name: 'preset',
+          label: 'Schedule',
+          type: 'select',
+          options: [
+            { label: 'Every Day  —  same hours all week', value: 'everyday' },
+            { label: 'Weekdays  —  Monday to Friday', value: 'weekdays' },
+            { label: 'Weekends  —  Saturday & Sunday', value: 'weekends' },
+            { label: 'Custom  —  set hours per day', value: 'custom' },
+          ],
+          admin: {
+            isClearable: true,
+            description: 'Pick a quick preset or "Custom" to configure each day individually.',
+          },
+        },
+        // ── Shared open / close time (every day / weekdays / weekends) ─────
+        {
+          type: 'row',
+          admin: {
+            condition: (_, sib) => Boolean(sib?.preset && sib.preset !== 'custom'),
+          },
+          fields: [
+            {
+              name: 'openTime',
+              label: 'Opens At',
+              type: 'text',
+              admin: {
+                placeholder: '09:00',
+                description: '24-hour format, e.g. 08:30',
+                width: '50%',
+              },
+            },
+            {
+              name: 'closeTime',
+              label: 'Closes At',
+              type: 'text',
+              admin: {
+                placeholder: '22:00',
+                description: '24-hour format, e.g. 23:00',
+                width: '50%',
+              },
+            },
+          ],
+        },
+        // ── Custom: per-day schedule ───────────────────────────────────────
+        {
+          name: 'monday',
+          label: 'Monday',
+          type: 'group',
+          admin: { condition: (_, sib) => sib?.preset === 'custom' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isOpen',
+                  label: 'Open',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: { width: '20%' },
+                },
+                {
+                  name: 'openTime',
+                  label: 'Opens At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '09:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+                {
+                  name: 'closeTime',
+                  label: 'Closes At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '22:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'tuesday',
+          label: 'Tuesday',
+          type: 'group',
+          admin: { condition: (_, sib) => sib?.preset === 'custom' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isOpen',
+                  label: 'Open',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: { width: '20%' },
+                },
+                {
+                  name: 'openTime',
+                  label: 'Opens At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '09:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+                {
+                  name: 'closeTime',
+                  label: 'Closes At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '22:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'wednesday',
+          label: 'Wednesday',
+          type: 'group',
+          admin: { condition: (_, sib) => sib?.preset === 'custom' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isOpen',
+                  label: 'Open',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: { width: '20%' },
+                },
+                {
+                  name: 'openTime',
+                  label: 'Opens At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '09:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+                {
+                  name: 'closeTime',
+                  label: 'Closes At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '22:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'thursday',
+          label: 'Thursday',
+          type: 'group',
+          admin: { condition: (_, sib) => sib?.preset === 'custom' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isOpen',
+                  label: 'Open',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: { width: '20%' },
+                },
+                {
+                  name: 'openTime',
+                  label: 'Opens At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '09:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+                {
+                  name: 'closeTime',
+                  label: 'Closes At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '22:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'friday',
+          label: 'Friday',
+          type: 'group',
+          admin: { condition: (_, sib) => sib?.preset === 'custom' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isOpen',
+                  label: 'Open',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: { width: '20%' },
+                },
+                {
+                  name: 'openTime',
+                  label: 'Opens At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '09:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+                {
+                  name: 'closeTime',
+                  label: 'Closes At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '22:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'saturday',
+          label: 'Saturday',
+          type: 'group',
+          admin: { condition: (_, sib) => sib?.preset === 'custom' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isOpen',
+                  label: 'Open',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: { width: '20%' },
+                },
+                {
+                  name: 'openTime',
+                  label: 'Opens At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '09:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+                {
+                  name: 'closeTime',
+                  label: 'Closes At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '22:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          name: 'sunday',
+          label: 'Sunday',
+          type: 'group',
+          admin: { condition: (_, sib) => sib?.preset === 'custom' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'isOpen',
+                  label: 'Open',
+                  type: 'checkbox',
+                  defaultValue: true,
+                  admin: { width: '20%' },
+                },
+                {
+                  name: 'openTime',
+                  label: 'Opens At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '09:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+                {
+                  name: 'closeTime',
+                  label: 'Closes At',
+                  type: 'text',
+                  admin: {
+                    placeholder: '22:00',
+                    width: '40%',
+                    condition: (_, sib) => Boolean(sib?.isOpen),
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        // ── Optional note (shown whenever a preset is selected) ────────────
+        {
+          name: 'note',
+          label: 'Note',
+          type: 'text',
+          maxLength: 80,
+          admin: {
+            placeholder: 'e.g. Closed on public holidays',
+            description: 'Short note displayed alongside hours (max 80 characters).',
+            condition: (_, sib) => Boolean(sib?.preset),
+          },
+        },
+      ],
+    },
     // ─── Contact & Location ──────────────────────────────────────────────────
     {
       name: 'deliveryNumber',
