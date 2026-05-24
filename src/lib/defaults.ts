@@ -9,6 +9,7 @@
 export const DEFAULTS = {
   restaurantName: 'Cafe Beirut',
   tagline: 'A taste of Lebanon',
+  description: 'Authentic Lebanese cuisine crafted with fresh ingredients and traditional recipes. Dine in, takeaway, or order for delivery.',
   currencySymbol: '$',
   deliveryNumber: 96178830254,
   locationTitle: 'Beirut, Lebanon',

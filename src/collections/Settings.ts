@@ -49,6 +49,17 @@ const Settings: CollectionConfig = {
       ],
     },
     {
+      name: 'description',
+      label: 'Short Description',
+      type: 'textarea',
+      defaultValue: DEFAULTS.description,
+      maxLength: 160,
+      admin: {
+        description:
+          'A brief description of your establishment (max 160 characters). Shown in the footer and can be used for SEO meta tags. Great for hospitality, food & beverage, or service businesses.',
+      },
+    },
+    {
       name: 'logo',
       label: 'Logo',
       type: 'upload',

@@ -268,6 +268,10 @@ export interface Setting {
    */
   tagline?: string | null;
   /**
+   * A brief description of your establishment (max 160 characters). Shown in the footer and can be used for SEO meta tags. Great for hospitality, food & beverage, or service businesses.
+   */
+  description?: string | null;
+  /**
    * Navbar logo. If left empty the restaurant name text is shown instead. Recommended: transparent PNG, ~200x60 px.
    */
   logo?: (number | null) | Media;
@@ -520,6 +524,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface SettingsSelect<T extends boolean = true> {
   restaurantName?: T;
   tagline?: T;
+  description?: T;
   logo?: T;
   primaryColor?: T;
   primaryForegroundColor?: T;
