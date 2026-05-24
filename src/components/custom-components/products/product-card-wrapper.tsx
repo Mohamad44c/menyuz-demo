@@ -2,7 +2,6 @@
 
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
-import { DEFAULTS } from '@/lib/defaults'
 import type { Media, Product } from '@/payload-types'
 import { useState } from 'react'
 import {
@@ -13,6 +12,7 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useCartStore } from '@/store/cartStore'
+import { useCurrency } from '@/hooks/use-currency'
 import ProductQuantityCounter from './product-quantity-counter'
 import { Button } from '@/components/ui/button'
 import type { ReactNode } from 'react'
@@ -26,12 +26,6 @@ interface ProductCardWrapperProps {
   sizeOptions?: Product['sizeOptions']
   children: ReactNode
   onClick?: (id: number) => void
-  currencySymbol?: string
-}
-
-function formatPrice(price: number) {
-  const fixed = price.toFixed(2)
-  return fixed.endsWith('.00') ? fixed.slice(0, -3) : fixed
 }
 
 export default function ProductCardWrapper({
@@ -43,9 +37,9 @@ export default function ProductCardWrapper({
   sizeOptions = [],
   children,
   onClick,
-  currencySymbol = DEFAULTS.currencySymbol,
 }: ProductCardWrapperProps) {
   const addToCart = useCartStore((state) => state.addToCart)
+  const { formatPrice } = useCurrency()
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -61,17 +55,17 @@ export default function ProductCardWrapper({
 
   const resolvedFeaturedImage = resolveFeaturedImage(featuredImage)
 
-  const handleAddToCart = () => {
-    const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
-    const sizeModifier = selectedSizeOption?.priceModifier || 0
-    const price = basePrice + sizeModifier
+  const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
+  const sizeModifier = selectedSizeOption?.priceModifier ?? 0
+  const displayPrice = basePrice + sizeModifier
 
+  const handleAddToCart = () => {
     const cartItem = {
       id: id.toString(),
       name,
       description,
       basePrice,
-      price,
+      price: displayPrice,
       size: selectedSize || 'Small',
       quantity,
       featuredImage: featuredImage ?? '',
@@ -114,11 +108,7 @@ export default function ProductCardWrapper({
               <div className="flex items-start justify-between gap-2">
                 <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
                 <p className="text-lg font-bold shrink-0 rounded-full bg-light-grey py-1 px-2.5">
-                  {currencySymbol}{formatPrice(
-                    basePrice +
-                      (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier ||
-                        0),
-                  )}
+                  {formatPrice(displayPrice)}
                 </p>
               </div>
               <DrawerDescription className="text-sm text-gray-400 mt-2">
@@ -127,11 +117,11 @@ export default function ProductCardWrapper({
             </div>
           </div>
 
-          {sizeOptions && sizeOptions?.length > 0 && (
+          {sizeOptions && sizeOptions.length > 0 && (
             <div className="flex items-center gap-4">
               <h3 className="font-medium">Select Size</h3>
               <div className="flex flex-wrap gap-2">
-                {sizeOptions?.map((option) => (
+                {sizeOptions.map((option) => (
                   <Button
                     variant="outline"
                     key={option.id || option.sizeName}
@@ -145,7 +135,7 @@ export default function ProductCardWrapper({
                   >
                     {option.sizeName}
                     {option.priceModifier && option.priceModifier > 0 && (
-                      <span className="ml-1">(+{currencySymbol}{formatPrice(option.priceModifier)})</span>
+                      <span className="ml-1">(+{formatPrice(option.priceModifier)})</span>
                     )}
                   </Button>
                 ))}
@@ -162,14 +152,7 @@ export default function ProductCardWrapper({
             isInCartGlance={false}
           />
           <div className="mt-auto pt-4 flex justify-between items-center border-t">
-            <div>
-              <span className="text-lg font-bold">
-                {currencySymbol}{formatPrice(
-                  basePrice +
-                    (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0),
-                )}
-              </span>
-            </div>
+            <span className="text-lg font-bold">{formatPrice(displayPrice)}</span>
             <button
               className="bg-primary text-background px-6 py-2 rounded-lg font-bold hover:bg-primary/80 transition-colors"
               onClick={handleAddToCart}

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import NextImage from 'next/image'
 import ThemeToggle from '../theme-toggle'
+import CurrencyToggle from './currency-toggle'
 import { useSettings } from '@/providers/settings-provider'
 import type { Media } from '@/payload-types'
 import { DEFAULTS } from '@/lib/defaults'
@@ -54,7 +55,8 @@ export default function Navbar() {
               )}
             </Link>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <CurrencyToggle />
             <ThemeToggle />
             {deliveryNumber != null && (
               <Link

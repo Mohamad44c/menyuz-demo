@@ -149,6 +149,118 @@ const Settings: CollectionConfig = {
         },
       ],
     },
+    // ─── Currency ────────────────────────────────────────────────────────────
+    {
+      type: 'collapsible',
+      label: 'Currency',
+      admin: { initCollapsed: false },
+      fields: [
+        // Primary currency
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'currencySymbol',
+              label: 'Primary Symbol',
+              type: 'text',
+              required: true,
+              defaultValue: DEFAULTS.currencySymbol,
+              admin: {
+                description: 'Symbol used with every price (e.g. $, £, €).',
+                width: '34%',
+              },
+            },
+            {
+              name: 'currencyPosition',
+              label: 'Symbol Position',
+              type: 'select',
+              defaultValue: DEFAULTS.currencyPosition,
+              options: [
+                { label: 'Before amount  ($10)', value: 'before' },
+                { label: 'After amount  (10 €)', value: 'after' },
+              ],
+              admin: {
+                description: 'Where the symbol appears relative to the number.',
+                width: '33%',
+              },
+            },
+            {
+              name: 'currencyLabel',
+              label: 'Switcher Label',
+              type: 'text',
+              defaultValue: DEFAULTS.currencyLabel,
+              admin: {
+                description: 'Short code shown in the currency toggle (e.g. USD, GBP).',
+                width: '33%',
+              },
+            },
+          ],
+        },
+        // Second currency toggle
+        {
+          name: 'secondaryCurrencyEnabled',
+          label: 'Enable Second Currency',
+          type: 'checkbox',
+          defaultValue: DEFAULTS.secondaryCurrencyEnabled,
+          admin: {
+            description:
+              'Adds a currency switcher to the navbar so customers can view prices in a second currency.',
+          },
+        },
+        // Second currency fields — shown only when enabled
+        {
+          type: 'row',
+          admin: {
+            condition: (_, sib) => Boolean(sib?.secondaryCurrencyEnabled),
+          },
+          fields: [
+            {
+              name: 'secondaryCurrencySymbol',
+              label: 'Second Symbol',
+              type: 'text',
+              admin: {
+                description: 'e.g. L.L, €, ₺',
+                width: '34%',
+              },
+            },
+            {
+              name: 'secondaryCurrencyPosition',
+              label: 'Symbol Position',
+              type: 'select',
+              defaultValue: DEFAULTS.secondaryCurrencyPosition,
+              options: [
+                { label: 'Before amount  ($10)', value: 'before' },
+                { label: 'After amount  (10 L.L)', value: 'after' },
+              ],
+              admin: {
+                description: 'Where the symbol appears relative to the number.',
+                width: '33%',
+              },
+            },
+            {
+              name: 'secondaryCurrencyLabel',
+              label: 'Switcher Label',
+              type: 'text',
+              admin: {
+                description: 'Short code shown in the toggle (e.g. LBP, EUR).',
+                width: '33%',
+              },
+            },
+          ],
+        },
+        {
+          name: 'secondaryCurrencyConversionRate',
+          label: 'Conversion Rate',
+          type: 'number',
+          min: 0,
+          admin: {
+            description:
+              'Units of the second currency equal to 1 unit of the primary. Example: 1 USD = 89,500 LBP → enter 89500. Prices are converted automatically on the frontend.',
+            condition: (_, sib) => Boolean(sib?.secondaryCurrencyEnabled),
+          },
+        },
+      ],
+    },
     // ─── Menu Configuration ──────────────────────────────────────────────────
     {
       type: 'collapsible',
@@ -156,29 +268,13 @@ const Settings: CollectionConfig = {
       admin: { initCollapsed: false },
       fields: [
         {
-          type: 'row',
-          fields: [
-            {
-              name: 'currencySymbol',
-              label: 'Currency Symbol',
-              type: 'text',
-              defaultValue: DEFAULTS.currencySymbol,
-              admin: {
-                description: 'Prepended to every price on the menu (e.g. £, $, €, LBP).',
-                width: '50%',
-              },
-            },
-            {
-              name: 'showDealsSection',
-              label: 'Show Deals Section',
-              type: 'checkbox',
-              defaultValue: true,
-              admin: {
-                description: 'Toggle to hide the deals/offers section from the menu.',
-                width: '50%',
-              },
-            },
-          ],
+          name: 'showDealsSection',
+          label: 'Show Deals Section',
+          type: 'checkbox',
+          defaultValue: true,
+          admin: {
+            description: 'Toggle to hide the deals/offers section from the menu.',
+          },
         },
       ],
     },

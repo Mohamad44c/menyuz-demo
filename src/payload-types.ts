@@ -292,9 +292,37 @@ export interface Setting {
    */
   primaryForegroundColorDark?: string | null;
   /**
-   * Prepended to every price on the menu (e.g. £, $, €, LBP).
+   * Symbol used with every price (e.g. $, £, €).
    */
-  currencySymbol?: string | null;
+  currencySymbol: string;
+  /**
+   * Where the symbol appears relative to the number.
+   */
+  currencyPosition?: ('before' | 'after') | null;
+  /**
+   * Short code shown in the currency toggle (e.g. USD, GBP).
+   */
+  currencyLabel?: string | null;
+  /**
+   * Adds a currency switcher to the navbar so customers can view prices in a second currency.
+   */
+  secondaryCurrencyEnabled?: boolean | null;
+  /**
+   * e.g. L.L, €, ₺
+   */
+  secondaryCurrencySymbol?: string | null;
+  /**
+   * Where the symbol appears relative to the number.
+   */
+  secondaryCurrencyPosition?: ('before' | 'after') | null;
+  /**
+   * Short code shown in the toggle (e.g. LBP, EUR).
+   */
+  secondaryCurrencyLabel?: string | null;
+  /**
+   * Units of the second currency equal to 1 unit of the primary. Example: 1 USD = 89,500 LBP → enter 89500. Prices are converted automatically on the frontend.
+   */
+  secondaryCurrencyConversionRate?: number | null;
   /**
    * Toggle to hide the deals/offers section from the menu.
    */
@@ -587,6 +615,13 @@ export interface SettingsSelect<T extends boolean = true> {
   primaryColorDark?: T;
   primaryForegroundColorDark?: T;
   currencySymbol?: T;
+  currencyPosition?: T;
+  currencyLabel?: T;
+  secondaryCurrencyEnabled?: T;
+  secondaryCurrencySymbol?: T;
+  secondaryCurrencyPosition?: T;
+  secondaryCurrencyLabel?: T;
+  secondaryCurrencyConversionRate?: T;
   showDealsSection?: T;
   openingHours?:
     | T

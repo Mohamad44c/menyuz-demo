@@ -1,8 +1,8 @@
 import Image, { StaticImageData } from 'next/image'
 import { cn } from '@/lib/utils'
-import { DEFAULTS } from '@/lib/defaults'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import type { Media } from '@/payload-types'
+import { PriceDisplay } from '../price-display'
 
 interface ProductCardViewProps {
   id: number
@@ -12,12 +12,6 @@ interface ProductCardViewProps {
   featuredImage?: string | StaticImageData | Media | null
   className?: string
   priority?: boolean
-  currencySymbol?: string
-}
-
-function formatPrice(price: number) {
-  const fixed = price.toFixed(2)
-  return fixed.endsWith('.00') ? fixed.slice(0, -3) : fixed
 }
 
 export default function ProductCardView({
@@ -27,7 +21,6 @@ export default function ProductCardView({
   featuredImage = null,
   className,
   priority = false,
-  currencySymbol = DEFAULTS.currencySymbol,
 }: ProductCardViewProps) {
   const resolveFeaturedImage = (
     image: ProductCardViewProps['featuredImage'],
@@ -66,8 +59,7 @@ export default function ProductCardView({
             <h3 className="text-base font-semibold">{name}</h3>
             <div className="flex items-center gap-1.5">
               <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
-                {currencySymbol}
-                {formatPrice(basePrice)}
+                <PriceDisplay amount={basePrice} />
               </p>
               <ChevronRight className="w-4 h-4 text-foreground/90" />
             </div>

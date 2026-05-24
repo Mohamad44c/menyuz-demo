@@ -8,7 +8,6 @@ import { Loader } from 'lucide-react'
 
 import ProductDisplayClient from '@/components/custom-components/products/product-display-client'
 import ProductDisplayShell from '@/components/custom-components/products/product-display-shell'
-import { DEFAULTS } from '@/lib/defaults'
 
 export const revalidate = 60
 
@@ -38,7 +37,6 @@ export default async function HomePage() {
 
   const showDeals = settings?.showDealsSection !== false
   const deals = showDeals ? dealsResult.docs : []
-  const currencySymbol = settings?.currencySymbol ?? DEFAULTS.currencySymbol
 
   return (
     <div className="container mx-auto">
@@ -54,7 +52,6 @@ export default async function HomePage() {
             categories={categories}
             products={products}
             deals={deals}
-            currencySymbol={currencySymbol}
           />
         </ProductDisplayClient>
       </Suspense>

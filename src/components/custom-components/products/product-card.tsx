@@ -12,9 +12,10 @@ import {
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { useCartStore } from '@/store/cartStore'
+import { useCurrency } from '@/hooks/use-currency'
 import ProductQuantityCounter from './product-quantity-counter'
 import { Button } from '@/components/ui/button'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 
 interface ProductCardProps {
   id: number
@@ -40,6 +41,7 @@ export default function ProductCard({
   priority = false,
 }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addToCart)
+  const { formatPrice } = useCurrency()
   const [quantity, setQuantity] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -55,24 +57,17 @@ export default function ProductCard({
 
   const resolvedFeaturedImage = resolveFeaturedImage(featuredImage)
 
-  const formatPrice = (price: number) => {
-    const fixed = price.toFixed(2)
-    return fixed.endsWith('.00') ? fixed.slice(0, -3) : fixed
-  }
-
-  //   console.log('[CART] ', cart)
+  const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
+  const sizeModifier = selectedSizeOption?.priceModifier ?? 0
+  const displayPrice = basePrice + sizeModifier
 
   const handleAddToCart = () => {
-    const selectedSizeOption = sizeOptions?.find((opt) => opt.sizeName === selectedSize)
-    const sizeModifier = selectedSizeOption?.priceModifier || 0
-    const price = basePrice + sizeModifier
-
     const cartItem = {
       id: id.toString(),
       name,
       description,
       basePrice,
-      price,
+      price: displayPrice,
       size: selectedSize || 'Small',
       quantity,
       featuredImage: featuredImage ?? '',
@@ -119,7 +114,7 @@ export default function ProductCard({
                 <h3 className="text-base font-semibold">{name}</h3>
                 <div className="flex items-center gap-1.5">
                   <p className="text-sm font-bold rounded-full bg-light-grey w-fit py-1 px-2 my-1">
-                    ${formatPrice(basePrice)}
+                    {formatPrice(basePrice)}
                   </p>
                   <ChevronRight className="w-4 h-4 text-foreground/90" />
                 </div>
@@ -149,12 +144,7 @@ export default function ProductCard({
               <div className="flex items-start justify-between gap-2">
                 <DrawerTitle className="text-xl font-bold">{name}</DrawerTitle>
                 <p className="text-lg font-bold shrink-0 rounded-full bg-light-grey py-1 px-2.5">
-                  $
-                  {formatPrice(
-                    basePrice +
-                      (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier ||
-                        0),
-                  )}
+                  {formatPrice(displayPrice)}
                 </p>
               </div>
               <DrawerDescription className="text-sm text-gray-400 mt-2">
@@ -163,11 +153,11 @@ export default function ProductCard({
             </div>
           </div>
 
-          {sizeOptions && sizeOptions?.length > 0 && (
+          {sizeOptions && sizeOptions.length > 0 && (
             <div className="flex items-center gap-4">
               <h3 className="font-medium">Select Size</h3>
               <div className="flex flex-wrap gap-2">
-                {sizeOptions?.map((option) => (
+                {sizeOptions.map((option) => (
                   <Button
                     variant="outline"
                     key={option.id || option.sizeName}
@@ -180,7 +170,7 @@ export default function ProductCard({
                   >
                     {option.sizeName}
                     {option.priceModifier && option.priceModifier > 0 && (
-                      <span className="ml-1">(+${formatPrice(option.priceModifier)})</span>
+                      <span className="ml-1">(+{formatPrice(option.priceModifier)})</span>
                     )}
                   </Button>
                 ))}
@@ -197,15 +187,7 @@ export default function ProductCard({
             isInCartGlance={false}
           />
           <div className="mt-auto pt-4 flex justify-between items-center border-t">
-            <div>
-              <span className="text-lg font-bold">
-                $
-                {formatPrice(
-                  basePrice +
-                    (sizeOptions?.find((opt) => opt.sizeName === selectedSize)?.priceModifier || 0),
-                )}
-              </span>
-            </div>
+            <span className="text-lg font-bold">{formatPrice(displayPrice)}</span>
             <button
               className="bg-primary text-background px-6 py-2 rounded-lg font-bold hover:bg-primary/80 transition-colors"
               onClick={handleAddToCart}

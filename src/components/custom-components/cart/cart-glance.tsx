@@ -11,8 +11,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { cn, moneyFormatter } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { useSettings } from '@/providers/settings-provider'
+import { useCurrency } from '@/hooks/use-currency'
 
 import { ShoppingCart } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
@@ -21,6 +22,7 @@ import CartListItems from './cart-list-items'
 export default function CartGlance() {
   const settings = useSettings()
   const { cart, totalItems, totalPrice } = useCartStore()
+  const { formatPrice, formatPrimaryPrice } = useCurrency()
   const [_isOpen, setIsOpen] = useState(false)
   const [hasMounted, setHasMounted] = useState(false)
 
@@ -31,16 +33,19 @@ export default function CartGlance() {
   const subtotal = hasMounted ? totalPrice() : 0
   const displayCart = hasMounted ? cart : []
 
-  // Function to generate WhatsApp order message
+  // WhatsApp order message always uses the primary (business) currency
   const generateWhatsAppMessage = () => {
     const itemsList = displayCart
-      .map((item) => `- ${item.name} (${item.quantity} x ${moneyFormatter.format(item.basePrice)})`)
+      .map(
+        (item) =>
+          `- ${item.name} (${item.quantity} x ${formatPrimaryPrice(item.basePrice)})`,
+      )
       .join('\n')
 
     return encodeURIComponent(
       `Hello! I would like to place an order:\n\n` +
         `${itemsList}\n\n` +
-        `Total: ${moneyFormatter.format(subtotal)}\n\n` +
+        `Total: ${formatPrimaryPrice(subtotal)}\n\n` +
         `Please confirm availability`,
     )
   }
@@ -75,7 +80,7 @@ export default function CartGlance() {
           </DrawerHeader>
           <DrawerFooter>
             <div className="flex justify-between items-center gap-4 rounded-t-xl text-foreground">
-              <span className="font-medium">Total: {moneyFormatter.format(subtotal)}</span>
+              <span className="font-medium">Total: {formatPrice(subtotal)}</span>
               {settings?.deliveryNumber != null ? (
                 <a
                   href={`https://wa.me/${settings.deliveryNumber}?text=${generateWhatsAppMessage()}`}

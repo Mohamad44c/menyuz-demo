@@ -4,8 +4,8 @@ import React from 'react'
 import Image, { StaticImageData } from 'next/image'
 import type { Media } from '@/payload-types'
 import { ICartItem, useCartStore } from '@/store/cartStore'
+import { useCurrency } from '@/hooks/use-currency'
 import ProductQuantityCounter from '../products/product-quantity-counter'
-import { moneyFormatter } from '@/lib/utils'
 
 function resolveImageSrc(
   featuredImage: ICartItem['featuredImage'],
@@ -25,6 +25,7 @@ type CartItemProps = {
 
 export default function CartItem({ cartItem }: CartItemProps) {
   const { incrementQuantity, decrementQuantity } = useCartStore()
+  const { formatPrice } = useCurrency()
 
   const productId = cartItem.id
   const name = cartItem.name
@@ -58,16 +59,12 @@ export default function CartItem({ cartItem }: CartItemProps) {
 
         <div className="flex flex-col justify-center items-end gap-2 shrink-0">
           <span className="text-sm font-bold rounded-full bg-muted text-foreground w-fit py-1.5 px-2.5">
-            {moneyFormatter.format(totalPrice)}
+            {formatPrice(totalPrice)}
           </span>
           <ProductQuantityCounter
             value={cartItem.quantity}
-            onIncrement={() => {
-              incrementQuantity(productId)
-            }}
-            onDecrement={() => {
-              decrementQuantity(productId)
-            }}
+            onIncrement={() => incrementQuantity(productId)}
+            onDecrement={() => decrementQuantity(productId)}
             isInCartGlance={true}
             variant="foreground"
           />
