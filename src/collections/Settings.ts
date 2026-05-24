@@ -11,6 +11,14 @@ const Settings: CollectionConfig = {
   access: {
     read: () => true,
     update: () => true,
+    create: async ({ req }) => {
+      const { totalDocs } = await req.payload.count({
+        collection: 'settings',
+        overrideAccess: true,
+      })
+      return totalDocs === 0
+    },
+    delete: () => false,
   },
   fields: [
     // ─── Branding ───────────────────────────────────────────────────────────
