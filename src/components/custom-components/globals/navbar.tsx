@@ -40,19 +40,8 @@ export default function Navbar() {
       <nav className="w-full border-b border-gray-200 sticky top-0 z-50 bg-background">
         <div className="mx-auto flex h-16 container items-center justify-between px-4 xl:px-0">
           <div className="flex items-center">
-            <Link href="/" aria-label={restaurantName}>
-              {logoUrl ? (
-                <NextImage
-                  src={logoUrl}
-                  alt={restaurantName}
-                  width={160}
-                  height={48}
-                  className="h-10 w-auto object-contain"
-                  priority
-                />
-              ) : (
-                <span className="text-xl font-bold text-primary">{restaurantName}</span>
-              )}
+            <Link href="/" aria-label={restaurantName} className="text-xl font-bold text-primary">
+              {restaurantName}
             </Link>
           </div>
           <div className="flex items-center gap-3">

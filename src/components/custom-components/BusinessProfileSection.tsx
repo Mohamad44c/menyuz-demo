@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import NextImage from 'next/image'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -14,7 +15,12 @@ import {
   BadgeCheck,
   ChevronDown,
   ChevronUp,
+  Download,
+  Copy,
+  Check,
+  X,
 } from 'lucide-react'
+import { QRCodeCanvas, QRCodeSVG } from 'qrcode.react'
 
 // ─── Inline social SVGs (no external deps needed) ────────────────────────────
 
@@ -88,6 +94,188 @@ export interface CategoryNavbarProps {
   stickyTop?: number
 }
 
+// ─── QrCodeDialog ─────────────────────────────────────────────────────────────
+
+function QrCodeDialog({
+  open,
+  onClose,
+  businessName,
+}: {
+  open: boolean
+  onClose: () => void
+  businessName: string
+}) {
+  const [url, setUrl] = useState('')
+  const [copied, setCopied] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const canvasRef = useRef<HTMLDivElement>(null)
+
+  // Mount guard for SSR — portals need document.body
+  useEffect(() => { setMounted(true) }, [])
+
+  // Resolve URL client-side only
+  useEffect(() => {
+    if (open) setUrl(window.location.href)
+  }, [open])
+
+  // Close on Escape
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [open, onClose])
+
+  const handleDownload = useCallback(() => {
+    // Find the hidden canvas we rendered for download
+    const canvas = canvasRef.current?.querySelector('canvas')
+    if (!canvas) return
+    const link = document.createElement('a')
+    link.download = `${businessName.replace(/\s+/g, '-').toLowerCase()}-qr.png`
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+  }, [businessName])
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // fallback: select input
+    }
+  }, [url])
+
+  if (!mounted) return null
+
+  return createPortal(
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm"
+            onClick={onClose}
+            aria-hidden
+          />
+
+          {/* Dialog panel */}
+          <motion.div
+            key="panel"
+            role="dialog"
+            aria-modal
+            aria-label="QR code"
+            initial={{ opacity: 0, scale: 0.92, y: 16 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: 16 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none px-6"
+          >
+            <div
+              className="pointer-events-auto relative w-full max-w-xs rounded-2xl bg-neutral-900 border border-neutral-800 shadow-2xl overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close button */}
+              <button
+                onClick={onClose}
+                aria-label="Close"
+                className="absolute top-3 right-3 p-1.5 rounded-full text-neutral-500 hover:text-white hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Header */}
+              <div className="pt-6 pb-4 px-6 text-center">
+                <p className="text-xs font-medium text-neutral-400 uppercase tracking-widest mb-0.5">
+                  Scan to visit
+                </p>
+                <p className="text-base font-semibold text-white leading-tight">
+                  {businessName}
+                </p>
+              </div>
+
+              {/* QR code */}
+              <div className="flex justify-center px-6 pb-5">
+                <div className="rounded-xl bg-white p-3 shadow-inner ring-1 ring-black/5">
+                  {url ? (
+                    <QRCodeSVG
+                      value={url}
+                      size={200}
+                      bgColor="#ffffff"
+                      fgColor="#111111"
+                      level="M"
+                      marginSize={0}
+                    />
+                  ) : (
+                    <div className="w-[200px] h-[200px] animate-pulse bg-neutral-100 rounded" />
+                  )}
+                </div>
+              </div>
+
+              {/* Hidden canvas for download (high-res) */}
+              <div ref={canvasRef} className="hidden" aria-hidden>
+                {url && (
+                  <QRCodeCanvas
+                    value={url}
+                    size={600}
+                    bgColor="#ffffff"
+                    fgColor="#111111"
+                    level="M"
+                    marginSize={2}
+                  />
+                )}
+              </div>
+
+              {/* URL pill */}
+              <div className="mx-6 mb-5">
+                <div className="flex items-center gap-2 bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2">
+                  <span className="flex-1 text-xs text-neutral-400 truncate min-w-0 font-mono">
+                    {url || '…'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="grid grid-cols-2 gap-2 px-6 pb-6">
+                <button
+                  onClick={handleCopy}
+                  className="flex items-center justify-center gap-1.5 rounded-lg bg-neutral-800 border border-neutral-700 hover:bg-neutral-700 text-white text-sm font-medium py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="text-emerald-400">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      Copy link
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={handleDownload}
+                  disabled={!url}
+                  className="flex items-center justify-center gap-1.5 rounded-lg bg-white hover:bg-neutral-100 text-black text-sm font-medium py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/40 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Download
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>,
+    document.body,
+  )
+}
+
 // ─── BusinessProfileAccordion ─────────────────────────────────────────────────
 
 export function BusinessProfileAccordion({
@@ -106,6 +294,7 @@ export function BusinessProfileAccordion({
   onQrCode,
 }: BusinessProfileAccordionProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [qrOpen, setQrOpen] = useState(false)
 
   // Small icon button shared style
   const iconBtn =
@@ -120,9 +309,9 @@ export function BusinessProfileAccordion({
             <NextImage
               src={logoSrc}
               alt={name}
-              width={96}
-              height={96}
-              className="w-full h-full object-cover"
+              width={120}
+              height={120}
+              className="w-full h-full scale-150 object-contain"
               priority
             />
           </div>
@@ -142,10 +331,7 @@ export function BusinessProfileAccordion({
             {name}
           </h1>
           {isVerified && (
-            <BadgeCheck
-              className="w-6 h-6 shrink-0 text-yellow-500"
-              aria-label="Verified"
-            />
+            <BadgeCheck className="w-6 h-6 shrink-0 text-yellow-500" aria-label="Verified" />
           )}
         </div>
         <p className="mt-1 text-sm text-neutral-500 tracking-wide">{category}</p>
@@ -175,7 +361,7 @@ export function BusinessProfileAccordion({
           </button>
           <button
             aria-label="QR code"
-            onClick={onQrCode}
+            onClick={onQrCode ?? (() => setQrOpen(true))}
             className={iconBtn}
           >
             <QrCode className="w-4 h-4" />
@@ -185,11 +371,7 @@ export function BusinessProfileAccordion({
         {/* Center: contact + social action icons */}
         <div className="flex items-center gap-0.5 min-w-0">
           {phone && (
-            <Link
-              href={`tel:${phone}`}
-              aria-label="Call us"
-              className={iconBtn}
-            >
+            <Link href={`tel:${phone}`} aria-label="Call us" className={iconBtn}>
               <Phone className="w-4 h-4" />
             </Link>
           )}
@@ -260,18 +442,13 @@ export function BusinessProfileAccordion({
                 />
                 <span className="text-sm text-neutral-300">
                   {isOpenNow ? 'Open now' : 'Closed'}
-                  {openUntil && (
-                    <span className="text-neutral-500"> · Closes at {openUntil}</span>
-                  )}
+                  {openUntil && <span className="text-neutral-500"> · Closes at {openUntil}</span>}
                 </span>
               </div>
 
               {/* Phone */}
               {phone && (
-                <Link
-                  href={`tel:${phone}`}
-                  className="flex items-center gap-3 group"
-                >
+                <Link href={`tel:${phone}`} className="flex items-center gap-3 group">
                   <Phone className="w-4 h-4 shrink-0 text-neutral-600 group-hover:text-neutral-400 transition-colors" />
                   <span className="text-sm text-neutral-300 group-hover:text-white transition-colors">
                     {phone}
@@ -281,10 +458,7 @@ export function BusinessProfileAccordion({
 
               {/* Email */}
               {email && (
-                <Link
-                  href={`mailto:${email}`}
-                  className="flex items-center gap-3 group"
-                >
+                <Link href={`mailto:${email}`} className="flex items-center gap-3 group">
                   <Mail className="w-4 h-4 shrink-0 text-neutral-600 group-hover:text-neutral-400 transition-colors" />
                   <span className="text-sm text-neutral-300 group-hover:text-white transition-colors">
                     {email}
@@ -310,6 +484,11 @@ export function BusinessProfileAccordion({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* QR Code Dialog — only rendered when not controlled externally */}
+      {!onQrCode && (
+        <QrCodeDialog open={qrOpen} onClose={() => setQrOpen(false)} businessName={name} />
+      )}
     </div>
   )
 }
@@ -389,7 +568,7 @@ export default function BusinessProfileSectionDemo() {
             navigator.clipboard.writeText(window.location.href)
           }
         }}
-        onQrCode={() => alert('QR code coming soon!')}
+        // onQrCode omitted → uses the built-in QR dialog
       />
 
       <CategoryNavbar
