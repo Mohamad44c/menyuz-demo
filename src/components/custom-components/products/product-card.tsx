@@ -161,16 +161,17 @@ export default function ProductCard({
                   <Button
                     variant="outline"
                     key={option.id || option.sizeName}
-                    className={`border rounded-lg h-8 text-sm transition-colors ${
+                    className={cn(
+                      'border rounded-lg h-8 text-sm transition-colors',
                       selectedSize === option.sizeName
                         ? 'bg-black text-white border-black'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
+                        : 'border-gray-300 hover:border-gray-400',
+                    )}
                     onClick={() => setSelectedSize(option.sizeName)}
                   >
                     {option.sizeName}
-                    {option.priceModifier && option.priceModifier > 0 && (
-                      <span className="ml-1">(+{formatPrice(option.priceModifier)})</span>
+                    {(option.priceModifier ?? 0) > 0 && (
+                      <span className="ml-1">(+{formatPrice(option.priceModifier!)})</span>
                     )}
                   </Button>
                 ))}

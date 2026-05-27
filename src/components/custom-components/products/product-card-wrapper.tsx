@@ -134,8 +134,8 @@ export default function ProductCardWrapper({
                     onClick={() => setSelectedSize(option.sizeName)}
                   >
                     {option.sizeName}
-                    {option.priceModifier && option.priceModifier > 0 && (
-                      <span className="ml-1">(+{formatPrice(option.priceModifier)})</span>
+                    {(option.priceModifier ?? 0) > 0 && (
+                      <span className="ml-1">(+{formatPrice(option.priceModifier!)})</span>
                     )}
                   </Button>
                 ))}
